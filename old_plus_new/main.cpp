@@ -16,15 +16,14 @@ int main()
     ekran.setSize(sf::Vector2f(1280,720));
     ekran.setPosition(0,0);
 
-//    sf::RectangleShape ekran_2;
-//    ekran_2.setSize(sf::Vector2f(1260,700));
-//    ekran_2.setPosition(10,10);
-//    ekran_2.setFillColor(sf::Color(50,50,100));
-
     sf::RectangleShape ekran_2;
-    ekran_2.setSize(sf::Vector2f(1300,740));
-    ekran_2.setPosition(-10,-10);
+    ekran_2.setSize(sf::Vector2f(1260,700));
+    ekran_2.setPosition(10,10);
     ekran_2.setFillColor(sf::Color(50,50,100));
+
+//    ekran_2.setSize(sf::Vector2f(1300,740));
+//    ekran_2.setPosition(-10,-10);
+//    ekran_2.setFillColor(sf::Color(50,50,100));
 
     sf::RectangleShape sth;
     sth.setSize(sf::Vector2f(25,500));
