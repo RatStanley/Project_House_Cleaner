@@ -1,31 +1,31 @@
 #include "temp.h"
 #include <math.h>
 
-std::vector<sf::RectangleShape> box(std::vector<std::vector<sf::Vector2f>> punkty)
-{
-    sf::RectangleShape shape;
-    shape.setFillColor(sf::Color(255,255,255));
-    shape.setSize(sf::Vector2f(5,5));
-    shape.setOrigin(2.5,2.5);
+//std::vector<sf::RectangleShape> box(std::vector<std::vector<sf::Vector2f>> punkty)
+//{
+//    sf::RectangleShape shape;
+//    shape.setFillColor(sf::Color(255,255,255));
+//    shape.setSize(sf::Vector2f(5,5));
+//    shape.setOrigin(2.5,2.5);
 
-    std::vector<sf::RectangleShape> boxy;
+//    std::vector<sf::RectangleShape> boxy;
 
-    int tr = 0;
+//    int tr = 0;
 
-    for(auto& el : punkty)
-    {
-        for(auto& vec : el)
-        {
-        shape.setPosition(vec);
-        boxy.emplace_back(shape);
-        shape.setSize(sf::Vector2f(5+tr,5+tr));
-        }
-//        shape.setOrigin(5+tr/2,5+tr/2);
-//        tr+=1;
-    }
-    //std::cout << punkty.size() << std::endl;
-    return boxy;
-}
+//    for(auto& el : punkty)
+//    {
+//        for(auto& vec : el)
+//        {
+//        shape.setPosition(vec);
+//        boxy.emplace_back(shape);
+//        shape.setSize(sf::Vector2f(5+tr,5+tr));
+//        }
+////        shape.setOrigin(5+tr/2,5+tr/2);
+////        tr+=1;
+//    }
+//    //std::cout << punkty.size() << std::endl;
+//    return boxy;
+//}
 
 std::vector<std::pair<sf::Vector2f, sf::Vector2f>> rect(sf::RectangleShape bryla)
 {
@@ -70,7 +70,6 @@ std::vector<std::vector<sf::Vector2f>> intersection_point(std::vector<std::pair<
         float y3 = el.y;
 
         std::vector<sf::Vector2f> temp;
-        //bool edge = false;
 
         for(auto& wall : all_lines) // wektor z daną prostą
         {
@@ -85,7 +84,6 @@ std::vector<std::vector<sf::Vector2f>> intersection_point(std::vector<std::pair<
             if(M_t != 0 && m_u != 0 )
             {
                 float t = L_t/M_t;
-                //float u = l_u/m_u;
                 if(0<=t && t <= 1 )
                 {
                     sf::Vector2f cord(x1+t*(x2-x1),y1+t*(y2-y1));
@@ -116,23 +114,12 @@ std::vector<std::vector<sf::Vector2f>> intersection_point(std::vector<std::pair<
         if(temp.size() > 1)
         {
             std::sort(temp.begin(), temp.end(), [x4, y4](sf::Vector2f one, sf::Vector2f two) {return pow(x4-one.x,2) + pow(y4-one.y,2) < pow(x4-two.x,2) + pow(y4-two.y,2);});
-
-            for(auto& poin : points_enti)
-            {
-                //if((temp[0].x == poin.x && temp[0].y == poin.y) || (temp[temp.size()-1].x == poin.x && temp[temp.size()-1].y == poin.y))
-                //{
-                    vector_of_lines.emplace_back(temp);
-                    break;
-                //}
-            }
+            vector_of_lines.emplace_back(temp);
         }
         for(auto& el : temp)
             points.emplace_back(el);
-
-
-
     }
-    //std::cout << vector_of_lines.size() << std::endl;
+
     return vector_of_lines;
 }
 
@@ -146,7 +133,7 @@ std::vector<sf::Vector2f> points_to_cheak(sf::RectangleShape bryla)
     return temp;
 }
 
-std::vector<std::vector<sf::Vector2f>> sort(std::vector<std::vector<sf::Vector2f>> points_vect, sf::Vector2f mysz)//mysz -> srodek układu
+std::vector<std::vector<sf::Vector2f>> sort_vector(std::vector<std::vector<sf::Vector2f>> points_vect, sf::Vector2f mysz)//mysz -> srodek układu
 {
     //sf::Vector2f ekran(1280,720); //do przekazania to będze
     ///   2 \  3
@@ -161,11 +148,11 @@ std::vector<std::vector<sf::Vector2f>> sort(std::vector<std::vector<sf::Vector2f
     {
         if(el[0].x < mysz.x && el[0].y >= mysz.y)
         {
-            angle = 90-atan2(el[0].y - mysz.y,  mysz.x - el[0].x)* 180 / M_PI;// - 180;
+            angle = 90-atan2(el[0].y - mysz.y,  mysz.x - el[0].x)* 180 / M_PI;
         }
         else if(el[0].x <= mysz.x && el[0].y < mysz.y)
         {
-            angle = atan2(mysz.y - el[0].y, mysz.x - el[0].x)* 180 / M_PI +90;//  - 180;
+            angle = atan2(mysz.y - el[0].y, mysz.x - el[0].x)* 180 / M_PI +90;
         }
         else if(el[0].x > mysz.x && el[0].y <= mysz.y)
         {
@@ -200,13 +187,11 @@ std::vector<std::vector<sf::Vector2f>> sort(std::vector<std::vector<sf::Vector2f
 std::vector<sf::ConvexShape> vector_v2_mask(std::vector<std::vector<sf::Vector2f>> points, std::vector<sf::Vector2f> vert)
 {
     sf::ConvexShape maska;
-    //maska.setFillColor(sf::Color::Black);
     maska.setFillColor(sf::Color(50,50,50));
 
     std::vector<sf::ConvexShape> vec;
     points.emplace_back(points[0]); // by brało pod uwagę pierwszy punkt
 
-//std::cout << points.size()-1 << std::endl;
     std::vector<size_t> off_set;
     for(size_t i = 0; i < points.size(); i++)
     {
@@ -299,7 +284,6 @@ std::vector<sf::ConvexShape> vector_v2_mask(std::vector<std::vector<sf::Vector2f
             {
                 idx_first = 0;
                 idx_sec = off_set[i-1];
-
             }
             if(points[i][0].x == points[i][1].x && points[i][0].y > points[i][1].y)
             {
@@ -309,17 +293,14 @@ std::vector<sf::ConvexShape> vector_v2_mask(std::vector<std::vector<sf::Vector2f
             else if(points[i][0].x == points[i][1].x && points[i][0].y < points[i][1].y)
             {
                 idx_sec ++;
-
             }
             else if(points[i-1][0].x == points[i-1][1].x && points[i-1][0].y > points[i-1][1].y)
             {
                 idx_first ++;
-
             }
             else if(points[i-1][0].x == points[i-1][1].x && points[i-1][0].y < points[i-1][1].y)
             {
                 idx_first ++;
-
             }
         }
         maska.setPointCount(4);

@@ -62,31 +62,12 @@ int main()
 
     }
 
-//    for(auto& el : rect(sth))
-//        lines.emplace_back(el);
-//    for(auto& el : rect(sec))
-//        lines.emplace_back(el);
-//    for(auto& el : rect(new_))
-//        lines.emplace_back(el);
 
-//    for(auto& el : rect(ekran_2))
-//        lines.emplace_back(el);
-
-//    for(auto& el : points_to_cheak(sth))
-//        points.emplace_back(el);
-//    for(auto& el : points_to_cheak(sec))
-//        points.emplace_back(el);
-//    for(auto& el : points_to_cheak(new_))
-//        points.emplace_back(el);
-
-//    for(auto& el : points_to_cheak(ekran_2))
-//        points.emplace_back(el);
 
     std::vector<std::vector<sf::Vector2f>> temp;
-    std::vector<sf::RectangleShape> boxys;
     sf::ConvexShape maska;
     std::vector<sf::ConvexShape> maska_vec;
-
+    sf::Vector2f mysz;
     while(window.isOpen())
     {
         sf::Time el = cl.restart();
@@ -97,10 +78,9 @@ int main()
         }
 
         window.clear(sf::Color::Black);
-
-        temp = intersection_point(lines, points, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
-        temp = sort(temp, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
-        boxys = box(temp);
+        mysz = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+        temp = intersection_point(lines, points, mysz);
+        temp = sort_vector(temp, mysz);
         maska_vec = vector_v2_mask(temp,points);
 
 
@@ -112,24 +92,6 @@ int main()
         window.draw(new_);
 
 
-
-
-        for(size_t i = 0; i < temp.size(); i+=1)
-        {
-            sf::Vertex line[] =
-            {
-                //sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window))),
-                sf::Vertex(temp[i][0]),
-                sf::Vertex(temp[i][temp[i].size()-1])
-            };
-
-            window.draw(line, 2, sf::Lines);
-        }
-
-        for(auto& el : boxys)
-            window.draw(el);
-
-        //std::cout << 1/el.asSeconds() << std::endl;
         window.display();
     }
 }
