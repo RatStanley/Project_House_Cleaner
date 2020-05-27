@@ -207,325 +207,121 @@ std::vector<sf::ConvexShape> vector_v2_mask(std::vector<std::vector<sf::Vector2f
     points.emplace_back(points[0]); // by brało pod uwagę pierwszy punkt
 
 //std::cout << points.size()-1 << std::endl;
+    std::vector<size_t> off_set;
+    for(size_t i = 0; i < points.size(); i++)
+    {
+        size_t temp = 0;
+        for(size_t j = 0; j < points.size(); j++)
+        {
+            if(temp != j)
+            {
+                off_set.emplace_back(temp);
+                break;
+            }
+            for(auto& el : vert)
+            {
+                if(points[i][j] == el)
+                {
+                    temp++;
+                    break;
+                }
+            }
+        }
+    }
+
 
     for(size_t i = 1; i < points.size(); i++)
     {
-        bool previous = false, present = false, next = false, present_next = false;
         maska.setFillColor(sf::Color(50,50,50));
         size_t idx_first = 0;
         size_t idx_sec = 0;
 
-
-                size_t off=1;
-                size_t off_2=1;
-        if(i != points.size()-1)
-        {
-            for(auto& ver : vert)
-            {
-                if(points[i][0].x == ver.x && points[i][0].y == ver.y)
-                    present = true;
-                if(points[i-1][0] == ver)
-                    previous = true;
-                if(points[i+1][0] == ver)
-                    next = true;
-            }
-            if(present == true)
-            {
-                for(size_t j = 1; j < points[i].size(); j++)
-                {
-                    if(j != off)
-                        break;
-                    for(auto& ver : vert)
-                    {
-                        if(points[i][j] == ver)
-                        {
-                            off++;
-                            break;
-                        }
-
-                    }
-                }
-            }
-            if(previous == true)
-            {
-                for(size_t j = 1; j < points[i-1].size(); j++)
-                {
-                    if(j != off_2)
-                        break;
-                    for(auto& ver : vert)
-                    {
-                        if(points[i-1][j] == ver)
-                        {
-                            off_2++;
-                            break;
-                        }
-
-                    }
-                }
-            }
-        }
-        if      (previous == true && present == false && next == true) //mage
-        {
-//            maska.setFillColor(sf::Color::Magenta);
-            if(points[i].size() == points[i-1].size()) //wygląda git
-            {
-
-                idx_first = 0;
-                idx_sec = 0;
-            }
-            else if(points[i].size() > points[i-1].size()) //działa
-            {
-                idx_first = 1;
-                idx_sec = 0;
-                //maska.setFillColor(sf::Color::Green);
-
-            }
-            else // więcej może naprawi
-            {
-                idx_first = 0;
-                idx_sec = 1;
-                //maska.setFillColor(sf::Color::White);
-
-            }
-
-
-        }
-        else if(previous == true && present == true && next == true) //yellow
-        {
-            maska.setFillColor(sf::Color::Yellow);
-            if(points[i].size() == points[i-1].size()) //prawie okej z góry jak nachodzą to bug może będzie ok
-            {
-                idx_first = 1;
-                idx_sec = 1;
-            }
-            else if(points[i].size() > points[i-1].size()) //git
-            {
-                idx_first = 1;
-                idx_sec = 0;
-                //maska.setFillColor(sf::Color::Green);
-            }
-            else            //chyba okej problem dol wiele naprawi
-            {
-                idx_first = 0;
-                idx_sec = 1;
-                //maska.setFillColor(sf::Color::White);
-            }
-
-            if(off >= 2 && off_2 >= 2)
-            {
-                maska.setFillColor(sf::Color::Magenta);
-                idx_first = off+1;
-                idx_sec = off_2+1;
-            }
-            else if(off_2 >= 2)
-            {
-                std::cout<<"dwa"<<std::endl;
-                maska.setFillColor(sf::Color::Green);
-                idx_first = off;
-                idx_sec = off_2;
-            }
-            else if(off >= 2)
-            {
-                maska.setFillColor(sf::Color::White);
-                if(points[i].size() !=off)
-                    idx_first = off;
-
-                if(points[i-1].size() !=off_2)
-                    idx_sec = off_2;
-                std::cout<<off <<"\t"<<off_2<<std::endl;
-
-
-            }
-
-        }
-        else if(previous == true && present == true && next == false) //red
-        {
-            maska.setFillColor(sf::Color::Red);
-            if(points[i].size() == points[i-1].size()) // okej
-            {
-                idx_first = 1;
-                idx_sec = 1;
-            }
-            else if(points[i].size() > points[i-1].size())// okej
-            {
-                idx_first = 1;
-                idx_sec = 0;
-                //maska.setFillColor(sf::Color::Blue);
-            }
-            else                //???
-            {
-
-                idx_first = 0;
-                idx_sec = 1;
-                //maska.setFillColor(sf::Color(255,10,100));
-            }
-
-            if(off >= 2 && off_2 >= 2)
-            {
-                maska.setFillColor(sf::Color::Blue);
-                idx_first = off+1;
-                idx_sec = off_2+1;
-            }
-            else if(off_2 >= 2)
-            {
-                std::cout<<"dwa"<<std::endl;
-                maska.setFillColor(sf::Color(sf::Color(255,200,200)));
-                //idx_first = off+1;
-                idx_sec = off_2+1;
-            }
-            else if(off >= 2)
-            {
-                std::cout<<"dwa"<<std::endl;
-                maska.setFillColor(sf::Color::White);
-                if(points[i].size() !=off+1)
-                    idx_first = off+1;
-                else
-                    idx_first = off;
-                if(points[i-1].size() !=off_2+1)
-                    idx_sec = off_2+1;
-                else
-                    idx_sec = off_2;
-            }
-        }
-        else if(previous == false && present == true && next == true) //blue wyglada ok
+        if(off_set[i] == 0 && off_set[i-1] == 0)
         {
             idx_first = 0;
             idx_sec = 0;
-//            maska.setFillColor(sf::Color::Blue);
-            if(points[i].size() == points[i-1].size()) // okej
-            {
-                idx_first = 1;
-                idx_sec = 1;
-            }
-            else if(points[i].size() > points[i-1].size())// okej
-            {
-                idx_first = 1;
-                idx_sec = 0;
-                //maska.setFillColor(sf::Color::Red);
-
-            }
-            else                //???
-            {
-
-                idx_first = 0;
-                idx_sec = 1;
-                //maska.setFillColor(sf::Color(255,10,100));
-            }
         }
-        else if(previous == false && present == false && next == false)//cyan tu chyba cos nie tak
+        else if(off_set[i] == 0 && off_set[i-1] > 0)
         {
-           maska.setFillColor(sf::Color::Cyan);
-            if(points[i].size() == points[i-1].size()) // zjebane
-            {
-                idx_first = 1;
-                idx_sec = 1;
-            }
-            else if(points[i].size() > points[i-1].size()) // chyba
-            {
-                idx_first = 1;
-                idx_sec = 0;
-               // maska.setFillColor(sf::Color::Green);
-            }
-            else            //chyba okej problem dol wiele naprawi
+
+            if(points[i].size() == points[i-1].size())
             {
                 idx_first = 0;
-                idx_sec = 1;
-               // maska.setFillColor(sf::Color::White);
+                idx_sec = 0;
             }
+            else if(points[i].size() > points[i-1].size())
+            {
+                idx_first = off_set[i];
+                idx_sec = 0;
+            }
+            else if(points[i].size() < points[i-1].size())
+            {
+                idx_first = 0;
+                idx_sec = off_set[i-1];
+            }
+
         }
-        else if(previous == false && present == false && next == false) //???
+        else if(off_set[i] > 0 && off_set[i-1] == 0)
         {
-//            maska.setFillColor(sf::Color(255,250,200));
-            idx_first = 0;
-            idx_sec = 0;
 
-//            if(points[i].size() == points[i-1].size()) //
-//            {
-//                idx_first = 1;
-//                idx_sec = 1;
-//                //maska.setFillColor(sf::Color::Yellow);
-//            }
-//            else if(points[i].size() > points[i-1].size()) //git
-//            {
-//                idx_first = 1;
-//                idx_sec = 0;
-//                //maska.setFillColor(sf::Color::Green);
-//            }
-//            else            //chyba okej problem dol wiele naprawi
-//            {
-//                idx_first = 0;
-//                idx_sec = 0;
-//                //maska.setFillColor(sf::Color::White);
-//            }
+            if(points[i].size() == points[i-1].size())
+            {
+                idx_first = 0;
+                idx_sec = 0;
+            }
+            else if(points[i].size() > points[i-1].size())
+            {
+                idx_first = off_set[i];
+                idx_sec = 0;
+            }
+            else if(points[i].size() < points[i-1].size())
+            {
+                idx_first = 0;
+                idx_sec = off_set[i-1];
+
+            }
+
         }
-        else if(previous == false && present == false && next == true) //dobrze jak jest
+        else if(off_set[i] > 0 && off_set[i-1] > 0)
         {
-//            maska.setFillColor(sf::Color(155,250,100));
-            idx_first = 0;
-            idx_sec = 0;
-        }
-        else if(previous == false && present == true && next == false) // ?? bo ja wiem xD chyba lepiej
-        {
-//            maska.setFillColor(sf::Color(255,100,255));
-            if(points[i].size() == points[i-1].size()) // zjebane
+
+            if(points[i].size() == points[i-1].size())
+            {
+                idx_first = off_set[i];
+                idx_sec = off_set[i-1];
+            }
+            else if(points[i].size() > points[i-1].size())
+            {
+                idx_first = off_set[i];
+                idx_sec = 0;
+            }
+            else if(points[i].size() < points[i-1].size())
             {
                 idx_first = 0;
-                idx_sec = 0;
-                //maska.setFillColor(sf::Color::Yellow);
+                idx_sec = off_set[i-1];
+
             }
-            else if(points[i].size() > points[i-1].size()) // chyba
+            if(points[i][0].x == points[i][1].x && points[i][0].y > points[i][1].y)
             {
-                idx_first = 1;
-                idx_sec = 0;
-                //maska.setFillColor(sf::Color::Green);
+                //idx_sec ++;
+
             }
-            else            //chyba okej problem dol wiele naprawi
+            else if(points[i][0].x == points[i][1].x && points[i][0].y < points[i][1].y)
             {
-                idx_first = 0;
-                idx_sec = 0;
-                //maska.setFillColor(sf::Color::White);
+                idx_sec ++;
+
             }
-        }
-        else if(previous == true && present == false && next == false) // git git chyba xD
-        {
-//            maska.setFillColor(sf::Color::White);
-            if(points[i].size() == points[i-1].size()) // zjebane
+            else if(points[i-1][0].x == points[i-1][1].x && points[i-1][0].y > points[i-1][1].y)
             {
-                idx_first = 0;
-                idx_sec = 0;
-                //maska.setFillColor(sf::Color::Yellow);
+                idx_first ++;
+
             }
-            else if(points[i].size() > points[i-1].size()) // chyba
+            else if(points[i-1][0].x == points[i-1][1].x && points[i-1][0].y < points[i-1][1].y)
             {
-                idx_first = 0;
-                idx_sec = 0;
-                //maska.setFillColor(sf::Color::Green);
-            }
-            else            //chyba okej problem dol wiele naprawi
-            {
-                idx_first = 0;
-                idx_sec = 1;
+                idx_first ++;
+
             }
         }
-
-//        if(off >= 2)
-//        {
-//            std::cout<<"jest"<<std::endl;
-//            maska.setFillColor(sf::Color::Magenta);
-//            idx_first = off+1;
-//            //idx_sec = off_2+1;
-//        }
-//        if(off_2 >= 2)
-//        {
-//            std::cout<<"dwa"<<std::endl;
-//            maska.setFillColor(sf::Color::White);
-//            //idx_first = off+1;
-//            idx_sec = off_2+1;
-//        }
-
-
-//            idx_sec = off+1;
-
         maska.setPointCount(4);
         maska.setPoint(0,points[i][idx_first]);
         maska.setPoint(1,points[i][points[i].size()-1]);
@@ -535,6 +331,4 @@ std::vector<sf::ConvexShape> vector_v2_mask(std::vector<std::vector<sf::Vector2f
     }
     return vec;
 }
-
-
 
