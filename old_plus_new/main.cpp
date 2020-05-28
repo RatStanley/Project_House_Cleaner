@@ -10,7 +10,7 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "window");
     sf::Clock cl;
-    //window.setFramerateLimit(30);
+    window.setFramerateLimit(30);
 
     sf::RectangleShape ekran;
     ekran.setSize(sf::Vector2f(1280,720));
@@ -27,7 +27,7 @@ int main()
 
     sf::RectangleShape sth;
     sth.setSize(sf::Vector2f(25,500));
-    sth.setPosition(700,101);
+    sth.setPosition(700,100);
     sth.setFillColor(sf::Color(100,100,100));
 
     sf::RectangleShape sec;
@@ -69,7 +69,7 @@ int main()
 
     }
 
-
+std::vector<sf::Vector2f> test;
 
     std::vector<std::vector<sf::Vector2f>> temp;
     sf::ConvexShape maska;
@@ -90,6 +90,7 @@ int main()
         temp = sort_vector(temp, mysz);
         maska_vec = vector_v2_mask(temp,points);
 
+        test = off_set(lines,temp,mysz);
 
         for(auto& el: maska_vec)
             window.draw(el);
@@ -99,7 +100,19 @@ int main()
         window.draw(new_);
         window.draw(new_2);
 
-std::cout << 1/el.asSeconds() << std::endl;
+        for(size_t i = 0; i < temp.size(); i+=1)
+        {
+            sf::Vertex line[] =
+            {
+                //sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window))),
+                sf::Vertex(test[i]),
+                sf::Vertex(mysz)
+            };
+
+            window.draw(line, 2, sf::Lines);
+        }
+
+//std::cout << 1/el.asSeconds() << std::endl;
         window.display();
     }
 }
