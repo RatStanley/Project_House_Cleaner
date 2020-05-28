@@ -1,33 +1,8 @@
 #include "temp.h"
 #include <math.h>
 
-//std::vector<sf::RectangleShape> box(std::vector<std::vector<sf::Vector2f>> punkty)
-//{
-//    sf::RectangleShape shape;
-//    shape.setFillColor(sf::Color(255,255,255));
-//    shape.setSize(sf::Vector2f(5,5));
-//    shape.setOrigin(2.5,2.5);
 
-//    std::vector<sf::RectangleShape> boxy;
-
-//    int tr = 0;
-
-//    for(auto& el : punkty)
-//    {
-//        for(auto& vec : el)
-//        {
-//        shape.setPosition(vec);
-//        boxy.emplace_back(shape);
-//        shape.setSize(sf::Vector2f(5+tr,5+tr));
-//        }
-////        shape.setOrigin(5+tr/2,5+tr/2);
-////        tr+=1;
-//    }
-//    //std::cout << punkty.size() << std::endl;
-//    return boxy;
-//}
-
-std::vector<std::pair<sf::Vector2f, sf::Vector2f>> rect(sf::RectangleShape bryla)
+std::vector<std::pair<sf::Vector2f, sf::Vector2f>> rect(const sf::RectangleShape &bryla)
 {
     std::pair<sf::Vector2f, sf::Vector2f> linia;
     std::vector<std::pair<sf::Vector2f, sf::Vector2f>> all_lines;
@@ -57,7 +32,7 @@ std::vector<std::pair<sf::Vector2f, sf::Vector2f>> rect(sf::RectangleShape bryla
     return all_lines;
 }
 
-std::vector<std::vector<sf::Vector2f>> intersection_point(std::vector<std::pair<sf::Vector2f, sf::Vector2f>> all_lines, std::vector<sf::Vector2f> points_enti, sf::Vector2f mysz)
+std::vector<std::vector<sf::Vector2f>> intersection_point( const std::vector<std::pair<sf::Vector2f, sf::Vector2f>> &all_lines, const std::vector<sf::Vector2f> &points_enti, const sf::Vector2f &mysz)
 {
     float x4 = mysz.x;
     float y4 = mysz.y;
@@ -123,7 +98,7 @@ std::vector<std::vector<sf::Vector2f>> intersection_point(std::vector<std::pair<
     return vector_of_lines;
 }
 
-std::vector<sf::Vector2f> points_to_cheak(sf::RectangleShape bryla)
+std::vector<sf::Vector2f> points_to_cheak(const sf::RectangleShape &bryla)
 {
     std::vector<sf::Vector2f> temp;
     temp.emplace_back(bryla.getGlobalBounds().left, bryla.getGlobalBounds().top);
@@ -133,7 +108,7 @@ std::vector<sf::Vector2f> points_to_cheak(sf::RectangleShape bryla)
     return temp;
 }
 
-std::vector<std::vector<sf::Vector2f>> sort_vector(std::vector<std::vector<sf::Vector2f>> points_vect, sf::Vector2f mysz)//mysz -> srodek układu
+std::vector<std::vector<sf::Vector2f>> sort_vector(std::vector<std::vector<sf::Vector2f>> points_vect, const sf::Vector2f &mysz)//mysz -> srodek układu
 {
     //sf::Vector2f ekran(1280,720); //do przekazania to będze
     ///   2 \  3
@@ -180,17 +155,17 @@ std::vector<std::vector<sf::Vector2f>> sort_vector(std::vector<std::vector<sf::V
             }
         }
     }
-
+    sorted.emplace_back(sorted[0]);
     return sorted;
 }
 
-std::vector<sf::ConvexShape> vector_v2_mask(std::vector<std::vector<sf::Vector2f>> points, std::vector<sf::Vector2f> vert)
+std::vector<sf::ConvexShape> vector_v2_mask(const std::vector<std::vector<sf::Vector2f>> &points, const std::vector<sf::Vector2f> &vert)
 {
     sf::ConvexShape maska;
     maska.setFillColor(sf::Color(50,50,50));
 
     std::vector<sf::ConvexShape> vec;
-    points.emplace_back(points[0]); // by brało pod uwagę pierwszy punkt
+    //points.emplace_back(points[0]); // by brało pod uwagę pierwszy punkt
 
     std::vector<size_t> off_set;
     for(size_t i = 0; i < points.size(); i++)
@@ -223,36 +198,97 @@ std::vector<sf::ConvexShape> vector_v2_mask(std::vector<std::vector<sf::Vector2f
 
         if(off_set[i] == 0 && off_set[i-1] == 0)
         {
-            idx_first = 0;
-            idx_sec = 0;
+            idx_first = 1;
+            idx_sec = 1;
         }
         else if(off_set[i] == 0 && off_set[i-1] > 0)
         {
-
             if(points[i].size() == points[i-1].size())
             {
-                idx_first = 0;
-                idx_sec = 0;
+
+                if(points[i+1].size() > points[i].size())
+                {
+                    idx_first = off_set[i];
+                    idx_sec = off_set[i-1];
+                    if(points[i-1][0].x == points[i-1][1].x)
+                    {
+                        idx_first = 0;
+                        idx_sec = 0;
+                    }
+                    else
+                    {
+                        idx_first = off_set[i];
+                        idx_sec = off_set[i-1];
+                    }
+                }
+                else if(points[i+1].size() < points[i].size())
+                {
+                    idx_first = off_set[i];
+                    idx_sec =0;
+                }
+                else
+                {
+                    idx_first = 0;
+                    idx_sec = 0;
+                }
+
+
             }
             else if(points[i].size() > points[i-1].size())
             {
+
                 idx_first = off_set[i];
                 idx_sec = 0;
             }
             else if(points[i].size() < points[i-1].size())
             {
+
                 idx_first = 0;
                 idx_sec = off_set[i-1];
+                if(points[i+1].size() > points[i].size())
+                {
+                    idx_first = off_set[i];
+                    idx_sec = off_set[i-1];
+                }
+                else if(points[i+1].size() < points[i].size())
+                {
+                    idx_first = 0;
+                    idx_sec =off_set[i-1];
+                }
+                else
+                {
+                    idx_first = off_set[i];
+                    idx_sec = off_set[i-1];
+                }
             }
 
         }
         else if(off_set[i] > 0 && off_set[i-1] == 0)
         {
-
             if(points[i].size() == points[i-1].size())
             {
-                idx_first = 0;
-                idx_sec = 0;
+
+                if(points[i-1][0].x != points[i-1][1].x)
+                {
+
+                    if(points[i-1][0].x == points[i][0].x || points[i-1][0].y == points[i][0].y )
+                    {
+                        idx_first = 0;
+                        idx_sec = 0;
+                    }
+                    else
+                    {
+                        idx_first =  off_set[i];
+                        idx_sec = off_set[i-1];
+                    }
+
+                }
+                else
+                {
+                    idx_first = off_set[i];
+                    idx_sec = off_set[i-1];
+                }
+
             }
             else if(points[i].size() > points[i-1].size())
             {
@@ -263,13 +299,11 @@ std::vector<sf::ConvexShape> vector_v2_mask(std::vector<std::vector<sf::Vector2f
             {
                 idx_first = 0;
                 idx_sec = off_set[i-1];
-
             }
 
         }
         else if(off_set[i] > 0 && off_set[i-1] > 0)
         {
-
             if(points[i].size() == points[i-1].size())
             {
                 idx_first = off_set[i];
@@ -288,7 +322,6 @@ std::vector<sf::ConvexShape> vector_v2_mask(std::vector<std::vector<sf::Vector2f
             if(points[i][0].x == points[i][1].x && points[i][0].y > points[i][1].y)
             {
                 //idx_sec ++;
-
             }
             else if(points[i][0].x == points[i][1].x && points[i][0].y < points[i][1].y)
             {
@@ -303,6 +336,19 @@ std::vector<sf::ConvexShape> vector_v2_mask(std::vector<std::vector<sf::Vector2f
                 idx_first ++;
             }
         }
+        if(points[i].size()-1 <= idx_first)
+        {
+            if(points[i].size()-1 == idx_first)
+                idx_first --;
+
+            else
+            idx_first = 0;
+        }
+        if(points[i-1].size()-1 <= idx_sec)
+        {
+               idx_sec = 0;
+        }
+
         maska.setPointCount(4);
         maska.setPoint(0,points[i][idx_first]);
         maska.setPoint(1,points[i][points[i].size()-1]);

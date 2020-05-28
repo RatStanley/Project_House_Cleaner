@@ -10,7 +10,7 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "window");
     sf::Clock cl;
-    window.setFramerateLimit(30);
+    //window.setFramerateLimit(30);
 
     sf::RectangleShape ekran;
     ekran.setSize(sf::Vector2f(1280,720));
@@ -40,6 +40,11 @@ int main()
     new_.setPosition(600,600);
     new_.setFillColor(sf::Color(100,100,100));
 
+    sf::RectangleShape new_2;
+    new_2.setSize(sf::Vector2f(500,25));
+    new_2.setPosition(101,300);
+    new_2.setFillColor(sf::Color(100,100,100));
+
 
 
 
@@ -52,6 +57,8 @@ int main()
     walls.emplace_back(sec);
     walls.emplace_back(new_);
     walls.emplace_back(ekran_2);
+    walls.emplace_back(new_2);
+
 
     for(auto& wall : walls)
     {
@@ -90,8 +97,9 @@ int main()
         window.draw(sth);
         window.draw(sec);
         window.draw(new_);
+        window.draw(new_2);
 
-
+std::cout << 1/el.asSeconds() << std::endl;
         window.display();
     }
 }
