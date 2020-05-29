@@ -107,7 +107,7 @@ std::vector<std::vector<sf::Vector2f>> intersection_point( const std::vector<std
 
 
     }
-//    std::cout << vector_of_lines.size() << std::endl;
+    //std::cout << vector_of_lines.size() << std::endl;
     return vector_of_lines;
 }
 
@@ -458,6 +458,55 @@ std::vector<sf::Vector2f> off_set(const std::vector<std::pair<sf::Vector2f, sf::
 
 
 std::vector<sf::ConvexShape> Done_maska(const std::vector<std::vector<sf::Vector2f>> &points, const std::vector<sf::Vector2f> &vertoff_Set)
+{
+    sf::ConvexShape maska;
+    maska.setFillColor(sf::Color(50,50,50));
+
+    std::vector<sf::ConvexShape> vec;
+    //points.emplace_back(points[0]); // by brało pod uwagę pierwszy punkt
+
+
+    for(size_t i = 1; i < points.size(); i++)
+    {
+        maska.setFillColor(sf::Color(50,50,50));
+        size_t idx_first = 0;
+        size_t idx_sec = 0;
+
+        for(size_t id_f = 0; id_f < points[i].size(); id_f ++)
+        {
+            bool next = false;
+            for(size_t id_s = 0; id_s < points[i].size(); id_s ++)
+            {
+                if(points[i][id_f].x == vertoff_Set[i-1].x && points[i-1][id_s].x == vertoff_Set[i-1].x)
+                {
+                    idx_first = id_f;
+                    idx_sec = id_s;
+                    next = true;
+                    break;
+                }
+                else if(points[i][id_f].y == vertoff_Set[i-1].y && points[i-1][id_s].y == vertoff_Set[i-1].y)
+                {
+                    idx_first = id_f;
+                    idx_sec = id_s;
+                    next = true;
+                    break;
+                }
+            }
+            if(next)
+                break;
+        }
+        maska.setPointCount(4);
+        maska.setPoint(0,points[i][idx_first]);
+        maska.setPoint(1,points[i][points[i].size()-1]);
+        maska.setPoint(2,points[i-1][points[i-1].size()-1]);
+        maska.setPoint(3,points[i-1][idx_sec]);
+        vec.emplace_back(maska);
+    }
+    return vec;
+}
+
+
+std::vector<sf::ConvexShape> test(const std::vector<std::vector<sf::Vector2f>> &points, const std::vector<sf::Vector2f> &vertoff_Set)
 {
     sf::ConvexShape maska;
     maska.setFillColor(sf::Color(50,50,50));
