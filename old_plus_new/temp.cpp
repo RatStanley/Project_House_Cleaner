@@ -107,7 +107,7 @@ std::vector<std::vector<sf::Vector2f>> intersection_point( const std::vector<std
 
 
     }
-    std::cout << vector_of_lines.size() << std::endl;
+//    std::cout << vector_of_lines.size() << std::endl;
     return vector_of_lines;
 }
 
@@ -376,71 +376,38 @@ std::vector<sf::ConvexShape> vector_v2_mask(const std::vector<std::vector<sf::Ve
 std::vector<sf::Vector2f> off_set(const std::vector<std::pair<sf::Vector2f, sf::Vector2f> > &all_lines, std::vector<std::vector<sf::Vector2f> > points, const sf::Vector2f &mysz)
 {
     std::vector<sf::Vector2f> off_Set;
-    size_t idx_first;
-    size_t idx_sec;
+
     std::vector<std::pair<size_t, size_t>> val;
-    std::vector<sf::Vector2f> points_;
 
 
     float x4 = mysz.x;
     float y4 = mysz.y;
 
-    for(size_t i = 1; i < points.size(); i++)
-    {
-        bool next = false;
-        idx_sec = 0;
-        idx_first = 0;
-        for(size_t j = 0; j < points.size(); j++)
-        {
-            for(size_t w = 0; w < points.size(); w++)
-            {
-                if(points[i][j].x == points[i-1][w].x)
-                {
-                    idx_first = j;
-                    idx_sec = w;
-                    next = true;
-                    break;
-                }
-                if(points[i][j].y == points[i-1][w].y)
-                {
-                    idx_first = j;
-                    idx_sec = w;
-                    next = true;
-                    break;
-                }
-            }
-            if(next)
-                break;
-        }
-        val.emplace_back(idx_first,idx_sec);
-    }
+
     for(size_t i = 1; i < points.size(); i++)
     {
         float x3 = points[i][0].x;
         float y3 = points[i][0].y;
 
-        if(points[i][val[i-1].first].x == points[i-1][val[i-1].second].x)
-        {
-            if(points[i][val[i-1].first].y > points[i-1][val[i-1].second].y)
+            if(points[i][0].y > points[i-1][0].y)
             {
-                y3 = points[i-1][val[i-1].second].y + (points[i][val[i-1].first].y - points[i-1][val[i-1].second].y)/2;
+                y3 = points[i-1][0].y + (points[i][0].y - points[i-1][0].y)/2;
             }
             else
             {
-                y3 = points[i][val[i-1].first].y + (points[i-1][val[i-1].second].y - points[i][val[i-1].first].y)/2;
+                y3 = points[i][0].y + (points[i-1][0].y - points[i][0].y)/2;
             }
-        }
-        else if(points[i][val[i-1].first].y == points[i-1][val[i-1].second].y)
-        {
-            if(points[i][val[i-1].first].x > points[i-1][val[i-1].second].x)
+
+            if(points[i][0].x > points[i-1][0].x)
             {
-                x3 = points[i-1][val[i-1].second].x + (points[i][val[i-1].first].x - points[i-1][val[i-1].second].x)/2;
+                x3 = points[i-1][0].x + (points[i][0].x - points[i-1][0].x)/2;
             }
             else
             {
-                x3 = points[i][val[i-1].first].x + (points[i-1][val[i-1].second].x - points[i][val[i-1].first].x)/2;
+                x3 = points[i][0].x + (points[i-1][0].x - points[i][0].x)/2;
             }
-        }
+
+
 
         std::vector<sf::Vector2f> temp;
 
@@ -466,11 +433,7 @@ std::vector<sf::Vector2f> off_set(const std::vector<std::pair<sf::Vector2f, sf::
                     if(iloczyn > 0)
                     {
                         bool already_is = false;
-                        for(auto& el : points_)
-                        {
-                            if(el == cord)
-                                already_is = true;
-                        }
+
                         for(auto& el : temp) //wyłącza przecięcia na rogach
                         {
                             if(el == cord)
@@ -484,14 +447,60 @@ std::vector<sf::Vector2f> off_set(const std::vector<std::pair<sf::Vector2f, sf::
             }
         }
 
-        //if(temp.size() > 1)
-        //{
+        if(temp.size() > 1)
+        {
             std::sort(temp.begin(), temp.end(), [x4, y4](sf::Vector2f one, sf::Vector2f two) {return pow(x4-one.x,2) + pow(y4-one.y,2) < pow(x4-two.x,2) + pow(y4-two.y,2);});
             off_Set.emplace_back(temp[0]);
-        //}
-        for(auto& el : temp)
-            points_.emplace_back(el);
+        }
     }
-//std::cout << vector_of_lines.size() << std::endl;
     return off_Set;
+}
+
+
+std::vector<sf::ConvexShape> Done_maska(const std::vector<std::vector<sf::Vector2f>> &points, const std::vector<sf::Vector2f> &vertoff_Set)
+{
+    sf::ConvexShape maska;
+    maska.setFillColor(sf::Color(50,50,50));
+
+    std::vector<sf::ConvexShape> vec;
+    //points.emplace_back(points[0]); // by brało pod uwagę pierwszy punkt
+
+
+    for(size_t i = 1; i < points.size(); i++)
+    {
+        maska.setFillColor(sf::Color(50,50,50));
+        size_t idx_first = 0;
+        size_t idx_sec = 0;
+
+        for(size_t id_f = 0; id_f < points[i].size(); id_f ++)
+        {
+            bool next = false;
+            for(size_t id_s = 0; id_s < points[i].size(); id_s ++)
+            {
+                if(points[i][id_f].x == vertoff_Set[i-1].x && points[i-1][id_s].x == vertoff_Set[i-1].x)
+                {
+                    idx_first = id_f;
+                    idx_sec = id_s;
+                    next = true;
+                    break;
+                }
+                else if(points[i][id_f].y == vertoff_Set[i-1].y && points[i-1][id_s].y == vertoff_Set[i-1].y)
+                {
+                    idx_first = id_f;
+                    idx_sec = id_s;
+                    next = true;
+                    break;
+                }
+            }
+            if(next)
+                break;
+        }
+        maska.setPointCount(4);
+        maska.setPoint(0,points[i][idx_first]);
+        maska.setPoint(1,points[i][points[i].size()-1]);
+        maska.setPoint(2,points[i-1][points[i-1].size()-1]);
+        maska.setPoint(3,points[i-1][idx_sec]);
+        vec.emplace_back(maska);
+    }
+    return vec;
 }

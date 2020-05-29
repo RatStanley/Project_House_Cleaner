@@ -10,7 +10,7 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "window");
     sf::Clock cl;
-    window.setFramerateLimit(30);
+    //window.setFramerateLimit(30);
 
     sf::RectangleShape ekran;
     ekran.setSize(sf::Vector2f(1280,720));
@@ -42,8 +42,13 @@ int main()
 
     sf::RectangleShape new_2;
     new_2.setSize(sf::Vector2f(500,25));
-    new_2.setPosition(101,300);
+    new_2.setPosition(100,300);
     new_2.setFillColor(sf::Color(100,100,100));
+
+    sf::RectangleShape new_3;
+    new_3.setSize(sf::Vector2f(500,25));
+    new_3.setPosition(725,200);
+    new_3.setFillColor(sf::Color(100,100,100));
 
 
 
@@ -58,6 +63,8 @@ int main()
     walls.emplace_back(new_);
     walls.emplace_back(ekran_2);
     walls.emplace_back(new_2);
+    walls.emplace_back(new_3);
+
 
 
     for(auto& wall : walls)
@@ -88,9 +95,11 @@ std::vector<sf::Vector2f> test;
         mysz = window.mapPixelToCoords(sf::Mouse::getPosition(window));
         temp = intersection_point(lines, points, mysz);
         temp = sort_vector(temp, mysz);
-        maska_vec = vector_v2_mask(temp,points);
+
+        //maska_vec = vector_v2_mask(temp,points);
 
         test = off_set(lines,temp,mysz);
+        maska_vec = Done_maska(temp,test);
 
         for(auto& el: maska_vec)
             window.draw(el);
@@ -99,20 +108,34 @@ std::vector<sf::Vector2f> test;
         window.draw(sec);
         window.draw(new_);
         window.draw(new_2);
+        window.draw(new_3);
 
-        for(size_t i = 0; i < temp.size(); i+=1)
-        {
-            sf::Vertex line[] =
-            {
-                //sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window))),
-                sf::Vertex(test[i]),
-                sf::Vertex(mysz)
-            };
 
-            window.draw(line, 2, sf::Lines);
-        }
+//        for(size_t i = 0; i < temp.size(); i+=1)
+//        {
+//            sf::Vertex line1[] =
+//            {
+//                //sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window))),
+//                sf::Vertex(temp[i][1],sf::Color::Green),
+//                sf::Vertex(mysz,sf::Color::Green)
+//            };
 
-//std::cout << 1/el.asSeconds() << std::endl;
+//            window.draw(line1, 2, sf::Lines);
+//        }
+
+//        for(size_t i = 0; i < test.size(); i+=1)
+//        {
+//            sf::Vertex line[] =
+//            {
+//                //sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window))),
+//                sf::Vertex(test[i],sf::Color::Red),
+//                sf::Vertex(mysz)
+//            };
+
+//            window.draw(line, 2, sf::Lines);
+//        }
+
+std::cout << 1/el.asSeconds() << std::endl;
         window.display();
     }
 }
