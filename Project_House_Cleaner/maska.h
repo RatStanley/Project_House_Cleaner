@@ -1,6 +1,6 @@
 #ifndef MASKA_H
 #define MASKA_H
-#pragma once
+
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -8,9 +8,12 @@ class maska
 {
 protected:
     std::vector<std::pair<sf::Vector2f, sf::Vector2f>> all_walls;// load when new map loaded;
-    std::vector<sf::Vector2f> points; // load when new map loaded;
+    std::vector<sf::Vector2f> all_points; // load when new map loaded;
+    std::vector<sf::Vector2f> current_points;
 
-    sf::RectangleShape current_view;
+    std::vector<sf::Vector2f> map_bound;
+
+    std::vector<sf::Vector2f> off_set_point;
     sf::Vector2f Player_pos;
 
     void intersection_point();
@@ -19,11 +22,11 @@ protected:
 public:
     maska();
     void rect_to_cheak(const sf::RectangleShape &bryla);
-    void set_pos(sf::RectangleShape view, sf::Vector2f mysz);
-    std::vector<sf::ConvexShape> Done_maska();
+    void set_pos(sf::View view, sf::Vector2f mysz);
+    void set_Map_Bond(const sf::RectangleShape &boind, const sf::RectangleShape &frame);
+    std::vector<sf::ConvexShape> Vec_mask();
 
     std::vector<std::vector<sf::Vector2f>> insersection;
-    std::vector<sf::Vector2f> off_set_point;
 
 };
 

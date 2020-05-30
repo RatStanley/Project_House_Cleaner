@@ -1,4 +1,3 @@
-#pragma once
 #include "maska.h"
 #include <math.h>
 #include <iostream>
@@ -10,7 +9,7 @@ void maska::intersection_point()
     float y4 = Player_pos.y;
 
     std::vector<sf::Vector2f> points_repeat;
-    for(auto& el : points)
+    for(auto& el : all_points)
     {
         float x3 = el.x;
         float y3 = el.y;
@@ -63,14 +62,14 @@ void maska::intersection_point()
         {
             std::sort(temp.begin(), temp.end(), [x4, y4](sf::Vector2f one, sf::Vector2f two) {return pow(x4-one.x,2) + pow(y4-one.y,2) < pow(x4-two.x,2) + pow(y4-two.y,2);});
 
-            for(auto& poin : points)
-            {
-                if((temp[0].x == poin.x && temp[0].y == poin.y) || (temp[temp.size()-1].x == poin.x && temp[temp.size()-1].y == poin.y))
-                {
+            //for(auto& poin : points)
+            //{
+                //if((temp[0].x == poin.x && temp[0].y == poin.y) || (temp[temp.size()-1].x == poin.x && temp[temp.size()-1].y == poin.y))
+                //{
                     insersection.emplace_back(temp);
-                    break;
-                }
-            }
+                    //break;
+                //}
+            //}
         }
         for(auto& el : temp)
             points_repeat.emplace_back(el);
@@ -206,14 +205,12 @@ void maska::off_set()
 
 maska::maska()
 {
-    //setFillColor(sf::Color(50,50,50));
+
 }
 
 void maska::rect_to_cheak(const sf::RectangleShape &bryla)
 {
     std::pair<sf::Vector2f, sf::Vector2f> linia;
-    std::vector<std::pair<sf::Vector2f, sf::Vector2f>> all_lines;
-
     linia = {
         sf::Vector2f(bryla.getGlobalBounds().left,bryla.getGlobalBounds().top),                             //lt
         sf::Vector2f(bryla.getGlobalBounds().left+bryla.getGlobalBounds().width,bryla.getGlobalBounds().top)  //pt
@@ -236,20 +233,84 @@ void maska::rect_to_cheak(const sf::RectangleShape &bryla)
     };
     all_walls.emplace_back(linia);
 
-    points.emplace_back(bryla.getGlobalBounds().left, bryla.getGlobalBounds().top);
-    points.emplace_back(bryla.getGlobalBounds().left + bryla.getGlobalBounds().width, bryla.getGlobalBounds().top);
-    points.emplace_back(bryla.getGlobalBounds().left + bryla.getGlobalBounds().width, bryla.getGlobalBounds().top + bryla.getGlobalBounds().height);
-    points.emplace_back(bryla.getGlobalBounds().left, bryla.getGlobalBounds().top + bryla.getGlobalBounds().height);
+    all_points.emplace_back(bryla.getGlobalBounds().left, bryla.getGlobalBounds().top);
+    all_points.emplace_back(bryla.getGlobalBounds().left + bryla.getGlobalBounds().width, bryla.getGlobalBounds().top);
+    all_points.emplace_back(bryla.getGlobalBounds().left + bryla.getGlobalBounds().width, bryla.getGlobalBounds().top + bryla.getGlobalBounds().height);
+    all_points.emplace_back(bryla.getGlobalBounds().left, bryla.getGlobalBounds().top + bryla.getGlobalBounds().height);
 }
 
-void maska::set_pos(sf::RectangleShape view, sf::Vector2f mysz)
+void maska::set_pos(sf::View view, sf::Vector2f mysz)
 {
-    current_view = view;
     Player_pos = mysz;
+    current_points.clear();
+    for(auto& point : map_bound)
+        current_points.emplace_back(point);
+    for(auto& point : all_points)
+    {
+        if(view.getViewport().contains(point))
+            current_points.emplace_back(point);
+    }
+}
+
+void maska::set_Map_Bond(const sf::RectangleShape &boind, const sf::RectangleShape &frame)
+{
+    std::pair<sf::Vector2f, sf::Vector2f> linia;
+    linia = {
+        sf::Vector2f(boind.getGlobalBounds().left,boind.getGlobalBounds().top),                             //lt
+        sf::Vector2f(boind.getGlobalBounds().left+boind.getGlobalBounds().width,boind.getGlobalBounds().top)  //pt
+    };
+    all_walls.emplace_back(linia);
+    linia = {
+        sf::Vector2f(boind.getGlobalBounds().left+boind.getGlobalBounds().width,boind.getGlobalBounds().top),  //pt
+        sf::Vector2f(boind.getGlobalBounds().left+boind.getGlobalBounds().width,boind.getGlobalBounds().top + boind.getGlobalBounds().height)//pd
+    };
+    all_walls.emplace_back(linia);
+    linia = {
+        sf::Vector2f(boind.getGlobalBounds().left+boind.getGlobalBounds().width,boind.getGlobalBounds().top + boind.getGlobalBounds().height),//pd
+        sf::Vector2f(boind.getGlobalBounds().left,boind.getGlobalBounds().top + boind.getGlobalBounds().height)//ld
+    };
+    all_walls.emplace_back(linia);
+    linia = {
+        sf::Vector2f(boind.getGlobalBounds().left,boind.getGlobalBounds().top),
+        sf::Vector2f(boind.getGlobalBounds().left,boind.getGlobalBounds().top + boind.getGlobalBounds().height)
+    };
+    all_walls.emplace_back(linia);
+
+    linia = {
+        sf::Vector2f(frame.getGlobalBounds().left,frame.getGlobalBounds().top),                             //lt
+        sf::Vector2f(frame.getGlobalBounds().left+frame.getGlobalBounds().width,frame.getGlobalBounds().top)  //pt
+    };
+    all_walls.emplace_back(linia);
+    linia = {
+        sf::Vector2f(frame.getGlobalBounds().left+frame.getGlobalBounds().width,frame.getGlobalBounds().top),  //pt
+        sf::Vector2f(frame.getGlobalBounds().left+frame.getGlobalBounds().width,frame.getGlobalBounds().top + frame.getGlobalBounds().height)//pd
+    };
+    all_walls.emplace_back(linia);
+    linia = {
+        sf::Vector2f(frame.getGlobalBounds().left+frame.getGlobalBounds().width,frame.getGlobalBounds().top + frame.getGlobalBounds().height),//pd
+        sf::Vector2f(frame.getGlobalBounds().left,frame.getGlobalBounds().top + frame.getGlobalBounds().height)//ld
+    };
+    all_walls.emplace_back(linia);
+    linia = {
+        sf::Vector2f(frame.getGlobalBounds().left,frame.getGlobalBounds().top),
+        sf::Vector2f(frame.getGlobalBounds().left,frame.getGlobalBounds().top + frame.getGlobalBounds().height)
+    };
+    all_walls.emplace_back(linia);
+
+    map_bound.clear();
+    map_bound.emplace_back(boind.getGlobalBounds().left, boind.getGlobalBounds().top);
+    map_bound.emplace_back(boind.getGlobalBounds().left + boind.getGlobalBounds().width, boind.getGlobalBounds().top);
+    map_bound.emplace_back(boind.getGlobalBounds().left + boind.getGlobalBounds().width, boind.getGlobalBounds().top + boind.getGlobalBounds().height);
+    map_bound.emplace_back(boind.getGlobalBounds().left, boind.getGlobalBounds().top + boind.getGlobalBounds().height);
+
+    map_bound.emplace_back(frame.getGlobalBounds().left, frame.getGlobalBounds().top);
+    map_bound.emplace_back(frame.getGlobalBounds().left + frame.getGlobalBounds().width, frame.getGlobalBounds().top);
+    map_bound.emplace_back(frame.getGlobalBounds().left + frame.getGlobalBounds().width, frame.getGlobalBounds().top + frame.getGlobalBounds().height);
+    map_bound.emplace_back(frame.getGlobalBounds().left, frame.getGlobalBounds().top + frame.getGlobalBounds().height);
 }
 
 
-std::vector<sf::ConvexShape> maska::Done_maska()
+std::vector<sf::ConvexShape> maska::Vec_mask()
 {
     intersection_point();
     sort_vector();
@@ -263,11 +324,13 @@ std::vector<sf::ConvexShape> maska::Done_maska()
     {
         size_t idx_first = 0;
         size_t idx_sec = 0;
+        maska.setFillColor(sf::Color(50,50,50));
 
         for(size_t id_f = 0; id_f < insersection[i].size(); id_f ++)
         {
             bool next = false;
-            for(size_t id_s = 0; id_s < insersection[i].size(); id_s ++)
+
+            for(size_t id_s = 0; id_s < insersection[i-1].size(); id_s ++)
             {
                 if(insersection[i][id_f].x == off_set_point[i-1].x && insersection[i-1][id_s].x == off_set_point[i-1].x)
                 {
@@ -276,7 +339,7 @@ std::vector<sf::ConvexShape> maska::Done_maska()
                     next = true;
                     break;
                 }
-                else if(insersection[i][id_f].y == off_set_point[i-1].y && insersection[i-1][id_s].y == off_set_point[i-1].y)
+                if(insersection[i][id_f].y == off_set_point[i-1].y && insersection[i-1][id_s].y == off_set_point[i-1].y)
                 {
                     idx_first = id_f;
                     idx_sec = id_s;

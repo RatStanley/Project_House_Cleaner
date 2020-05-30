@@ -1,4 +1,3 @@
-#pragma once
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -8,22 +7,27 @@
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "window");
+    window.setFramerateLimit(30);
     sf::Clock cl;
 
-    maska test;
 
-    sf::RectangleShape ekran;
-    ekran.setSize(sf::Vector2f(1280,720));
-    ekran.setPosition(0,0);
+    maska Maska;
+    sf::View view;
+    view.setSize(1280,720);
 
-    sf::RectangleShape ekran_2;
-    ekran_2.setSize(sf::Vector2f(1260,700));
-    ekran_2.setPosition(10,10);
-    ekran_2.setFillColor(sf::Color(50,50,100));
 
-    ekran_2.setSize(sf::Vector2f(1300,740));
-    ekran_2.setPosition(-10,-10);
-    ekran_2.setFillColor(sf::Color(50,50,100));
+    sf::RectangleShape map_borders;
+    map_borders.setSize(sf::Vector2f(12800,7200));
+    map_borders.setPosition(map_borders.getSize().x/2,map_borders.getSize().y/2);
+    map_borders.setOrigin(map_borders.getSize().x/2,map_borders.getSize().y/2);
+
+
+    sf::RectangleShape map_frame;
+    map_frame.setSize(map_borders.getSize());
+    map_frame.setOrigin(map_frame.getSize().x/2,map_frame.getSize().y/2);
+    map_frame.setPosition(map_borders.getPosition());
+    map_frame.setScale(1.01,1.02);
+
 
     sf::RectangleShape sth;
     sth.setSize(sf::Vector2f(25,500));
@@ -50,13 +54,15 @@ int main()
     new_3.setPosition(725,200);
     new_3.setFillColor(sf::Color(100,100,100));
 
-    test.rect_to_cheak(ekran);
-    test.rect_to_cheak(ekran_2);
-    test.rect_to_cheak(sth);
-    test.rect_to_cheak(sec);
-    test.rect_to_cheak(new_);
-    test.rect_to_cheak(new_2);
-    test.rect_to_cheak(new_3);
+    Maska.set_Map_Bond(map_borders,map_frame); // by działało dodaj te dwie do .rect_to_cheak
+
+    Maska.rect_to_cheak(sth);
+    Maska.rect_to_cheak(sec);
+    Maska.rect_to_cheak(new_);
+    Maska.rect_to_cheak(new_2);
+    Maska.rect_to_cheak(new_3);
+
+
 
 
     while(window.isOpen())
@@ -68,8 +74,20 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            view.move(-150*el.asSeconds(),0);
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+            view.move(150*el.asSeconds(),0);
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+            view.move(0,-150*el.asSeconds());
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+            view.move(0,150*el.asSeconds());
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            view.move(0,0);
 
+        window.setView(view);
         window.clear(sf::Color::Black);
+
 
         window.draw(sth);
         window.draw(sec);
@@ -77,34 +95,24 @@ int main()
         window.draw(new_2);
         window.draw(new_3);
 
-        test.set_pos(ekran,window.mapPixelToCoords(sf::Mouse::getPosition(window)));
-        //test.Done_maska();
-        for(auto& el : test.Done_maska())
+
+        Maska.set_pos(view,window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+        for(auto& el : Maska.Vec_mask())
             window.draw(el);
 
-                for(size_t i = 0; i < test.insersection.size(); i+=1)
-                {
-                    sf::Vertex line1[] =
-                    {
-                        //sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window))),
-                        sf::Vertex(test.insersection[i][0],sf::Color::Green),
-                        sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window)),sf::Color::Green)
-                    };
+        for(size_t i = 0; i < Maska.insersection.size(); i+=+1)
+        {
+            sf::Vertex line[] =
+            {
+                sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window))),
+                //sf::Vertex(temp[i+1]),
+                sf::Vertex(Maska.insersection[i][0])
+            };
 
-                    window.draw(line1, 2, sf::Lines);
-                }
-std::cout << test.off_set_point.size() << std::endl;
-                for(size_t i = 0; i < test.off_set_point.size(); i+=1)
-                {
-                    sf::Vertex line[] =
-                    {
-                        //sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window))),
-                        sf::Vertex(test.off_set_point[i],sf::Color::Red),
-                        sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window)))
-                    };
+            window.draw(line, 2, sf::Lines);
+        }
 
-                    window.draw(line, 2, sf::Lines);
-                }
+
 
         window.display();
     }

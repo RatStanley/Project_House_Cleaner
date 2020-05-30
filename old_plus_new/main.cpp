@@ -53,8 +53,8 @@ int main()
 
 
 
-    std::vector<std::pair<sf::Vector2f, sf::Vector2f>> lines = rect(ekran);
-    std::vector<sf::Vector2f> points = points_to_cheak(ekran);
+    std::vector<std::pair<sf::Vector2f, sf::Vector2f>> lines ;//= rect(ekran);
+    std::vector<sf::Vector2f> points;// = points_to_cheak(ekran);
 
     std::vector<sf::RectangleShape> walls;
     walls.emplace_back(ekran);
@@ -101,14 +101,15 @@ std::vector<sf::Vector2f> test;
         test = off_set(lines,temp,mysz);
         maska_vec = Done_maska(temp,test);
 
-        for(auto& el: maska_vec)
-            window.draw(el);
 
         window.draw(sth);
         window.draw(sec);
         window.draw(new_);
         window.draw(new_2);
         window.draw(new_3);
+
+        for(auto& el: maska_vec)
+            window.draw(el);
 
 
 //        for(size_t i = 0; i < temp.size(); i+=1)
@@ -135,7 +136,7 @@ std::vector<sf::Vector2f> test;
 //            window.draw(line, 2, sf::Lines);
 //        }
 
-std::cout << 1/el.asSeconds() << std::endl;
+//std::cout << 1/el.asSeconds() << std::endl;
         window.display();
     }
 }
