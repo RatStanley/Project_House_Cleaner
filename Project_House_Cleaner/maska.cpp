@@ -9,7 +9,7 @@ void maska::intersection_point()
     float y4 = Player_pos.y;
 
     std::vector<sf::Vector2f> points_repeat;
-    for(auto& el : all_points)
+    for(auto& el : current_points)
     {
         float x3 = el.x;
         float y3 = el.y;
@@ -239,15 +239,20 @@ void maska::rect_to_cheak(const sf::RectangleShape &bryla)
     all_points.emplace_back(bryla.getGlobalBounds().left, bryla.getGlobalBounds().top + bryla.getGlobalBounds().height);
 }
 
-void maska::set_pos(sf::View view, sf::Vector2f mysz)
+void maska::set_pos(sf::RectangleShape view, sf::Vector2f mysz)
 {
     Player_pos = mysz;
     current_points.clear();
+
+    sf::RectangleShape temp;
+    temp.setSize(sf::Vector2f(5,5));
+    temp.setOrigin(2.5,2.5);
+
     for(auto& point : map_bound)
         current_points.emplace_back(point);
     for(auto& point : all_points)
     {
-        if(view.getViewport().contains(point))
+        if(view.getGlobalBounds().contains(point))
             current_points.emplace_back(point);
     }
 }

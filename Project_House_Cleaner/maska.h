@@ -22,7 +22,7 @@ protected:
 public:
     maska();
     void rect_to_cheak(const sf::RectangleShape &bryla);
-    void set_pos(sf::View view, sf::Vector2f mysz);
+    void set_pos(sf::RectangleShape view, sf::Vector2f mysz);
     void set_Map_Bond(const sf::RectangleShape &boind, const sf::RectangleShape &frame);
     std::vector<sf::ConvexShape> Vec_mask();
 
