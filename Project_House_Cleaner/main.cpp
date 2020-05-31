@@ -3,78 +3,32 @@
 #include <iostream>
 
 #include "maska.h"
-
+#include "map.h"
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "window");
-    //window.setFramerateLimit(30);
+//    window.setFramerateLimit(30);
     sf::Clock cl;
 
 
     maska Maska;
+    Map mapa;
+
     sf::View view;
     view.setSize(1280,720);
 
 
-    sf::RectangleShape map_borders;
-    map_borders.setSize(sf::Vector2f(12800,7200));
-    map_borders.setPosition(map_borders.getSize().x/2,map_borders.getSize().y/2);
-    map_borders.setOrigin(map_borders.getSize().x/2,map_borders.getSize().y/2);
-
-
-    sf::RectangleShape map_frame;
-    map_frame.setSize(map_borders.getSize());
-    map_frame.setOrigin(map_frame.getSize().x/2,map_frame.getSize().y/2);
-    map_frame.setPosition(map_borders.getPosition());
-    map_frame.setScale(1.01,1.02);
 
     sf::RectangleShape View_rec;
-    View_rec.setSize(sf::Vector2f(1280*2,720*2));
+    View_rec.setSize(sf::Vector2f(1280,720));
     View_rec.setPosition(View_rec.getSize().x/2,View_rec.getSize().y/2);
-    //View_rec.setPosition(0,0);
     View_rec.setOrigin(View_rec.getSize().x/2,View_rec.getSize().y/2);
     View_rec.setFillColor(sf::Color::Red);
 
 
-    sf::RectangleShape sth;
-    sth.setSize(sf::Vector2f(25,500));
-    sth.setPosition(700,100);
-    sth.setFillColor(sf::Color(100,100,100));
-
-    sf::RectangleShape sec;
-    sec.setSize(sf::Vector2f(500,25));
-    sec.setPosition(10,600);
-    sec.setFillColor(sf::Color(100,100,100));
-
-    sf::RectangleShape new_;
-    new_.setSize(sf::Vector2f(500,25));
-    new_.setPosition(600,600);
-    new_.setFillColor(sf::Color(100,100,100));
-
-    sf::RectangleShape new_2;
-    new_2.setSize(sf::Vector2f(500,25));
-    new_2.setPosition(100,300);
-    new_2.setFillColor(sf::Color(100,100,100));
-
-    sf::RectangleShape new_3;
-    new_3.setSize(sf::Vector2f(500,25));
-    new_3.setPosition(725,200);
-    new_3.setFillColor(sf::Color(100,100,100));
-
-    Maska.set_Map_Bond(map_borders,map_frame); // by działało dodaj te dwie do .rect_to_cheak
-
-    Maska.rect_to_cheak(sth);
-    Maska.rect_to_cheak(sec);
-    Maska.rect_to_cheak(new_);
-    Maska.rect_to_cheak(new_2);
-    Maska.rect_to_cheak(new_3);
-
-    sf::RectangleShape TEST;
-    TEST.setSize(sf::Vector2f(20,20));
-    TEST.setPosition(725,200);
-    TEST.setFillColor(sf::Color::White);
 
 
+sf::Vector2f mysz;
     while(window.isOpen())
     {
         sf::Time el = cl.restart();
@@ -99,17 +53,10 @@ int main()
         window.clear(sf::Color::Black);
         View_rec.setPosition(view.getCenter());
 
-        TEST.setPosition(view.getCenter());
 
-        window.draw(sth);
-        window.draw(sec);
-        window.draw(new_);
-        window.draw(new_2);
-        window.draw(new_3);
-        window.draw(TEST);
+        mysz = window.mapPixelToCoords(sf::Mouse::getPosition(window)); // pozycja
 
-
-        Maska.set_pos(View_rec,view.getCenter());//window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+        Maska.set_point(mapa,View_rec,mysz);
         for(auto& el : Maska.Vec_mask())
             window.draw(el);
 
@@ -117,7 +64,7 @@ int main()
 //        {
 //            sf::Vertex line[] =
 //            {
-//                sf::Vertex(view.getCenter()),//window.mapPixelToCoords(sf::Mouse::getPosition(window))),
+//                sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window))),
 //                //sf::Vertex(temp[i+1]),
 //                sf::Vertex(Maska.insersection[i][0])
 //            };
@@ -127,7 +74,7 @@ int main()
 
         //window.draw(View_rec);
 
-std::cout << 1/el.asSeconds() << std::endl;
+//std::cout << 1/el.asSeconds() << std::endl;
         window.display();
     }
 }

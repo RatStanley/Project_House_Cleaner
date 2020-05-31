@@ -15,9 +15,8 @@ void maska::intersection_point()
         float y3 = el.y;
 
         std::vector<sf::Vector2f> temp;
-        //bool edge = false;
 
-        for(auto& wall : all_walls) // wektor z daną prostą
+        for(auto& wall : visible_walls) // wektor z daną prostą
         {
             float x2 = wall.first.x;
             float y2 = wall.first.y;
@@ -30,7 +29,6 @@ void maska::intersection_point()
             if(M_t != 0 && m_u != 0 )
             {
                 float t = L_t/M_t;
-                //float u = l_u/m_u;
                 if(0<=t && t <= 1 )
                 {
                     sf::Vector2f cord(x1+t*(x2-x1),y1+t*(y2-y1));
@@ -61,21 +59,13 @@ void maska::intersection_point()
         if(temp.size() > 1)
         {
             std::sort(temp.begin(), temp.end(), [x4, y4](sf::Vector2f one, sf::Vector2f two) {return pow(x4-one.x,2) + pow(y4-one.y,2) < pow(x4-two.x,2) + pow(y4-two.y,2);});
-
-            //for(auto& poin : points)
-            //{
-                //if((temp[0].x == poin.x && temp[0].y == poin.y) || (temp[temp.size()-1].x == poin.x && temp[temp.size()-1].y == poin.y))
-                //{
-                    insersection.emplace_back(temp);
-                    //break;
-                //}
-            //}
+            insersection.emplace_back(temp);
         }
         for(auto& el : temp)
             points_repeat.emplace_back(el);
 
     }
-        //std::cout << insersection.size() << std::endl;
+//        std::cout << insersection.size() << std::endl;
 
 }
 
@@ -159,7 +149,7 @@ void maska::off_set()
 
         std::vector<sf::Vector2f> temp;
 
-        for(auto& wall : all_walls) // wektor z daną prostą
+        for(auto& wall : visible_walls) // wektor z daną prostą
         {
             float x2 = wall.first.x;
             float y2 = wall.first.y;
@@ -208,118 +198,12 @@ maska::maska()
 
 }
 
-void maska::rect_to_cheak(const sf::RectangleShape &bryla)
-{
-    std::pair<sf::Vector2f, sf::Vector2f> linia;
-    linia = {
-        sf::Vector2f(bryla.getGlobalBounds().left,bryla.getGlobalBounds().top),                             //lt
-        sf::Vector2f(bryla.getGlobalBounds().left+bryla.getGlobalBounds().width,bryla.getGlobalBounds().top)  //pt
-    };
-    all_walls.emplace_back(linia);
-    linia = {
-        sf::Vector2f(bryla.getGlobalBounds().left+bryla.getGlobalBounds().width,bryla.getGlobalBounds().top),  //pt
-        sf::Vector2f(bryla.getGlobalBounds().left+bryla.getGlobalBounds().width,bryla.getGlobalBounds().top + bryla.getGlobalBounds().height)//pd
-    };
-    all_walls.emplace_back(linia);
-    linia = {
-        sf::Vector2f(bryla.getGlobalBounds().left+bryla.getGlobalBounds().width,bryla.getGlobalBounds().top + bryla.getGlobalBounds().height),//pd
-        sf::Vector2f(bryla.getGlobalBounds().left,bryla.getGlobalBounds().top + bryla.getGlobalBounds().height)//ld
-    };
-    all_walls.emplace_back(linia);
-    linia = {
-        sf::Vector2f(bryla.getGlobalBounds().left,bryla.getGlobalBounds().top),
-        sf::Vector2f(bryla.getGlobalBounds().left,bryla.getGlobalBounds().top + bryla.getGlobalBounds().height)
-
-    };
-    all_walls.emplace_back(linia);
-
-    all_points.emplace_back(bryla.getGlobalBounds().left, bryla.getGlobalBounds().top);
-    all_points.emplace_back(bryla.getGlobalBounds().left + bryla.getGlobalBounds().width, bryla.getGlobalBounds().top);
-    all_points.emplace_back(bryla.getGlobalBounds().left + bryla.getGlobalBounds().width, bryla.getGlobalBounds().top + bryla.getGlobalBounds().height);
-    all_points.emplace_back(bryla.getGlobalBounds().left, bryla.getGlobalBounds().top + bryla.getGlobalBounds().height);
-}
-
-void maska::set_pos(sf::RectangleShape view, sf::Vector2f mysz)
-{
-    Player_pos = mysz;
-    current_points.clear();
-
-    sf::RectangleShape temp;
-    temp.setSize(sf::Vector2f(5,5));
-    temp.setOrigin(2.5,2.5);
-
-    for(auto& point : map_bound)
-        current_points.emplace_back(point);
-    for(auto& point : all_points)
-    {
-        if(view.getGlobalBounds().contains(point))
-            current_points.emplace_back(point);
-    }
-}
-
-void maska::set_Map_Bond(const sf::RectangleShape &boind, const sf::RectangleShape &frame)
-{
-    std::pair<sf::Vector2f, sf::Vector2f> linia;
-    linia = {
-        sf::Vector2f(boind.getGlobalBounds().left,boind.getGlobalBounds().top),                             //lt
-        sf::Vector2f(boind.getGlobalBounds().left+boind.getGlobalBounds().width,boind.getGlobalBounds().top)  //pt
-    };
-    all_walls.emplace_back(linia);
-    linia = {
-        sf::Vector2f(boind.getGlobalBounds().left+boind.getGlobalBounds().width,boind.getGlobalBounds().top),  //pt
-        sf::Vector2f(boind.getGlobalBounds().left+boind.getGlobalBounds().width,boind.getGlobalBounds().top + boind.getGlobalBounds().height)//pd
-    };
-    all_walls.emplace_back(linia);
-    linia = {
-        sf::Vector2f(boind.getGlobalBounds().left+boind.getGlobalBounds().width,boind.getGlobalBounds().top + boind.getGlobalBounds().height),//pd
-        sf::Vector2f(boind.getGlobalBounds().left,boind.getGlobalBounds().top + boind.getGlobalBounds().height)//ld
-    };
-    all_walls.emplace_back(linia);
-    linia = {
-        sf::Vector2f(boind.getGlobalBounds().left,boind.getGlobalBounds().top),
-        sf::Vector2f(boind.getGlobalBounds().left,boind.getGlobalBounds().top + boind.getGlobalBounds().height)
-    };
-    all_walls.emplace_back(linia);
-
-    linia = {
-        sf::Vector2f(frame.getGlobalBounds().left,frame.getGlobalBounds().top),                             //lt
-        sf::Vector2f(frame.getGlobalBounds().left+frame.getGlobalBounds().width,frame.getGlobalBounds().top)  //pt
-    };
-    all_walls.emplace_back(linia);
-    linia = {
-        sf::Vector2f(frame.getGlobalBounds().left+frame.getGlobalBounds().width,frame.getGlobalBounds().top),  //pt
-        sf::Vector2f(frame.getGlobalBounds().left+frame.getGlobalBounds().width,frame.getGlobalBounds().top + frame.getGlobalBounds().height)//pd
-    };
-    all_walls.emplace_back(linia);
-    linia = {
-        sf::Vector2f(frame.getGlobalBounds().left+frame.getGlobalBounds().width,frame.getGlobalBounds().top + frame.getGlobalBounds().height),//pd
-        sf::Vector2f(frame.getGlobalBounds().left,frame.getGlobalBounds().top + frame.getGlobalBounds().height)//ld
-    };
-    all_walls.emplace_back(linia);
-    linia = {
-        sf::Vector2f(frame.getGlobalBounds().left,frame.getGlobalBounds().top),
-        sf::Vector2f(frame.getGlobalBounds().left,frame.getGlobalBounds().top + frame.getGlobalBounds().height)
-    };
-    all_walls.emplace_back(linia);
-
-    map_bound.clear();
-    map_bound.emplace_back(boind.getGlobalBounds().left, boind.getGlobalBounds().top);
-    map_bound.emplace_back(boind.getGlobalBounds().left + boind.getGlobalBounds().width, boind.getGlobalBounds().top);
-    map_bound.emplace_back(boind.getGlobalBounds().left + boind.getGlobalBounds().width, boind.getGlobalBounds().top + boind.getGlobalBounds().height);
-    map_bound.emplace_back(boind.getGlobalBounds().left, boind.getGlobalBounds().top + boind.getGlobalBounds().height);
-
-    map_bound.emplace_back(frame.getGlobalBounds().left, frame.getGlobalBounds().top);
-    map_bound.emplace_back(frame.getGlobalBounds().left + frame.getGlobalBounds().width, frame.getGlobalBounds().top);
-    map_bound.emplace_back(frame.getGlobalBounds().left + frame.getGlobalBounds().width, frame.getGlobalBounds().top + frame.getGlobalBounds().height);
-    map_bound.emplace_back(frame.getGlobalBounds().left, frame.getGlobalBounds().top + frame.getGlobalBounds().height);
-}
-
-
 std::vector<sf::ConvexShape> maska::Vec_mask()
 {
     intersection_point();
     sort_vector();
     off_set();
+
     std::vector<sf::ConvexShape> vec;
     sf::ConvexShape maska;
     maska.setFillColor(sf::Color(50,50,50));
@@ -364,3 +248,12 @@ std::vector<sf::ConvexShape> maska::Vec_mask()
     }
     return vec;
 }
+
+void maska::set_point(Map &m, sf::RectangleShape &view, sf::Vector2f pos)
+{
+    m.set_curent_visible(view);
+    current_points = m.point_on_screen;
+    visible_walls = m.walls_on_screen;
+    Player_pos = pos;
+}
+

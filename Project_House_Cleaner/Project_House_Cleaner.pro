@@ -5,6 +5,7 @@ CONFIG -= qt
 
 SOURCES += \
         main.cpp \
+        map.cpp \
         maska.cpp
 
 
@@ -17,4 +18,5 @@ CONFIG(debug, debug|release){
 }
 
 HEADERS += \
+    map.h \
     maska.h
