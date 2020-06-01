@@ -65,7 +65,7 @@ void maska::intersection_point()
             points_repeat.emplace_back(el);
 
     }
-//        std::cout << insersection.size() << std::endl;
+        //std::cout << insersection.size() << std::endl;
 
 }
 
@@ -191,6 +191,8 @@ void maska::off_set()
             off_set_point.emplace_back(temp[0]);
         }
     }
+    //std::cout << off_set_point.size() << std::endl;
+
 }
 
 maska::maska()

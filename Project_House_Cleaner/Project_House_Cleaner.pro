@@ -18,5 +18,6 @@ CONFIG(debug, debug|release){
 }
 
 HEADERS += \
+    BMP.h \
     map.h \
     maska.h

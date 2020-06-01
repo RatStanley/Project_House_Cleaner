@@ -1,5 +1,5 @@
 #include "map.h"
-
+#include <string>
 void Map::Struct_wall(const sf::RectangleShape &bryla, int id)
 {
     Wall Temp;
@@ -61,6 +61,122 @@ void Map::Struct_wall(const sf::RectangleShape &bryla, int id)
 
 }
 
+void Map::convert_bitMap_to_grid(const char* file) // funcka zczytuje grid z bitmapy
+{
+    map_grid.clear();
+    std::vector<Conversion> conversions = { {{0, 0, 0},"1"}, // ściana
+    {{255, 255, 255}, "0" },//puste pole
+    {{255,0,0},"2"},//pozycja startowa
+    {{0,255,0},"3"},
+    {{0,0,255},"4"},
+    };
+
+    BMP bmp(file);
+    std::vector<std::vector<RGB>> image = bmp.foo();
+    for (int y = image[0].size()-1; y>=0; y--)
+    {
+        std::vector<int> temp;
+        for (int x = 0; x < image.size(); x++)
+        {
+            for (auto& conversion : conversions)
+            {
+                if (image[x][y].R == conversion.from.R && image[x][y].G == conversion.from.G && image[x][y].B == conversion.from.B)
+                {
+                    temp.emplace_back(stoi(conversion.to));
+                }
+            }
+        }
+        map_grid.emplace_back(temp);
+    }
+}
+
+void Map::grid_to_walls()
+{
+    sf::RectangleShape temp_wall;
+
+    sf::RectangleShape map_borders;
+    map_borders.setSize(sf::Vector2f(map_grid[0].size()+100*pix_size,map_grid.size()+100*pix_size));
+    map_borders.setPosition(map_borders.getSize().x/2,map_borders.getSize().y/2);
+    map_borders.setOrigin(map_borders.getSize().x/2,map_borders.getSize().y/2);
+
+    Struct_wall(map_borders,0);
+
+    sf::RectangleShape map_frame;
+    map_frame.setSize(map_borders.getSize());
+    map_frame.setOrigin(map_frame.getSize().x/2,map_frame.getSize().y/2);
+    map_frame.setPosition(map_borders.getPosition());
+    map_frame.setScale(1.01,1.02);
+
+    Struct_wall(map_frame,1);
+
+
+    for(size_t i = 0; i < map_grid.size(); i++)
+    {
+        for(size_t j = 0; j <map_grid[i].size(); j++)
+        {
+            if(map_grid[i][j] == 1)
+            {
+                temp_wall.setSize(wall_length(i,j));
+                temp_wall.setPosition((j* pix_size)+100,(i* pix_size)+100);
+                Struct_wall(temp_wall,2);
+            }
+            if(map_grid[i][j] == 3)
+            {
+                if(map_grid[i][j+1] == 3 || map_grid[i][j-1] == 3)
+                {
+                    temp_wall.setSize(sf::Vector2f(pix_size,pix_size/2));
+                    temp_wall.setPosition((j* pix_size)+100,(i* pix_size)+100+20);
+                }
+                else if(map_grid[i+1][j] == 3 || map_grid[i-1][j] == 3)
+                {
+                    temp_wall.setSize(sf::Vector2f(pix_size/2,pix_size));
+                    temp_wall.setPosition((j* pix_size)+100+20,(i* pix_size)+100);
+                }
+                Struct_wall(temp_wall,2);
+            }
+        }
+    }
+    for(size_t i = 0; i < map_grid.size(); i++)
+    {
+        for(size_t j = 0; j <map_grid[i].size(); j++)
+        {
+            if(map_grid[i][j] == 0)
+                std::cout <<" ";
+            else
+                std::cout << map_grid[i][j];
+        }
+        std::cout << std::endl;
+    }
+}
+
+sf::Vector2f Map::wall_length(size_t i,size_t j)
+{
+    int length = 1;
+    int width = 1;
+    bool l = true, p = true;
+    map_grid[i][j] = 5;
+    while(true)
+    {
+        if(map_grid[j].size()-1 != j && map_grid[i][j+1] == 1 && p == true)
+        {
+            width++;
+            map_grid[i][j+1] = 9;
+            j++;
+            l = false;
+        }
+        else if(map_grid.size()-1 != i && map_grid[i+1][j] == 1 && l == true)
+        {
+                length++;
+                map_grid[i+1][j] = 7;
+                i++;
+                p = false;
+        }
+        else
+            break;
+    }
+    return sf::Vector2f(width * pix_size,length * pix_size);
+}
+
 Map::Map()
 {
 
@@ -109,6 +225,12 @@ Map::Map()
     new_3.setFillColor(sf::Color(100,100,100));
     Struct_wall(new_3,2);
 
+}
+
+Map::Map(const char *file)
+{
+    convert_bitMap_to_grid(file);
+    grid_to_walls();
 }
 
 void Map::set_curent_visible(sf::RectangleShape view)
