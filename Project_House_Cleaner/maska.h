@@ -11,7 +11,6 @@ protected:
     std::vector<std::pair<sf::Vector2f, sf::Vector2f>> visible_walls;
     std::vector<sf::Vector2f> current_points;
     sf::Vector2f Player_pos;
-    std::vector<std::vector<sf::Vector2f>> insersection;
     std::vector<sf::Vector2f> off_set_point;
 
     void intersection_point();
@@ -20,9 +19,10 @@ protected:
 public:
     maska();
     std::vector<sf::ConvexShape> Vec_mask();
-    void set_point(Map &m, sf::RectangleShape &view, sf::Vector2f pos);
+    void set_point(Map &m, sf::RectangleShape &view, sf::Vector2f pos, sf::Time cl);
 
 
+    std::vector<std::vector<sf::Vector2f>> insersection;
 
 
 };

@@ -59,7 +59,17 @@ void maska::intersection_point()
         if(temp.size() > 1)
         {
             std::sort(temp.begin(), temp.end(), [x4, y4](sf::Vector2f one, sf::Vector2f two) {return pow(x4-one.x,2) + pow(y4-one.y,2) < pow(x4-two.x,2) + pow(y4-two.y,2);});
-            insersection.emplace_back(temp);
+            //insersection.emplace_back(temp);
+            for(auto& poin : current_points)
+            {
+                if((temp[0].x == poin.x && temp[0].y == poin.y) ||
+                   (temp[temp.size()-1].x == poin.x && temp[temp.size()-1].y == poin.y) ||
+                        (temp[1].x == poin.x && temp[1].y == poin.y))
+                {
+                    insersection.emplace_back(temp);
+                    break;
+                }
+            }
         }
         for(auto& el : temp)
             points_repeat.emplace_back(el);
@@ -185,11 +195,11 @@ void maska::off_set()
             }
         }
 
-        if(temp.size() > 1)
-        {
+        //if(temp.size() > 1)
+        //{
             std::sort(temp.begin(), temp.end(), [x4, y4](sf::Vector2f one, sf::Vector2f two) {return pow(x4-one.x,2) + pow(y4-one.y,2) < pow(x4-two.x,2) + pow(y4-two.y,2);});
             off_set_point.emplace_back(temp[0]);
-        }
+        //}
     }
     //std::cout << off_set_point.size() << std::endl;
 
@@ -251,11 +261,14 @@ std::vector<sf::ConvexShape> maska::Vec_mask()
     return vec;
 }
 
-void maska::set_point(Map &m, sf::RectangleShape &view, sf::Vector2f pos)
+void maska::set_point(Map &m, sf::RectangleShape &view, sf::Vector2f pos, sf::Time cl)
 {
     m.set_curent_visible(view);
     current_points = m.point_on_screen;
     visible_walls = m.walls_on_screen;
     Player_pos = pos;
+    m.door_move(pos,cl);
+    if(m.elevator.getGlobalBounds().contains(pos))
+        std::cout<< "test" << std::endl;
 }
 

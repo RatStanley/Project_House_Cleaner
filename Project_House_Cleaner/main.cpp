@@ -7,7 +7,7 @@
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "window");
-    window.setFramerateLimit(60);
+    //window.setFramerateLimit(60);
     sf::Clock cl;
 
 
@@ -43,17 +43,17 @@ int main()
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
             view.move(-150*el.asSeconds()*2,0);
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            view.move(150*el.asSeconds()*2,0);
+            view.move(350*el.asSeconds()*2,0);
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
             view.move(0,-150*el.asSeconds()*2);
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
             view.move(0,150*el.asSeconds()*2);
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-            view.move(0,0);
+            view.setCenter(mapa.door[1].rect.getGlobalBounds().left,mapa.door[2].rect.getGlobalBounds().top);
 
         window.setView(view);
         mysz = window.mapPixelToCoords(sf::Mouse::getPosition(window)); // pozycja
-        Maska.set_point(mapa,View_rec,mysz);
+        Maska.set_point(mapa,View_rec,mysz,el);
         View_rec.setPosition(view.getCenter());
 //rysuj
         window.clear(sf::Color::Black);
@@ -61,7 +61,18 @@ int main()
         for(auto& el : Maska.Vec_mask())
             window.draw(el);
 
+//        mapa.test_Draw(window);
+//        for(size_t i = 0; i < Maska.insersection.size(); i+=+1)
+//        {
+//            sf::Vertex line[] =
+//            {
+//                sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window))),
+//                //sf::Vertex(temp[i+1]),
+//                sf::Vertex(Maska.insersection[i][0])
+//            };
 
+//            window.draw(line, 2, sf::Lines);
+//        }
 
         window.display();
 //        std::cout << 1/el.asSeconds() << std::endl;
