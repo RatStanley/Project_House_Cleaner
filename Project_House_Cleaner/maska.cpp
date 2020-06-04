@@ -8,6 +8,9 @@ void maska::intersection_point()
     float x4 = Player_pos.x;
     float y4 = Player_pos.y;
 
+
+
+
     std::vector<sf::Vector2f> points_repeat;
     for(auto& el : current_points)
     {
@@ -59,7 +62,7 @@ void maska::intersection_point()
         if(temp.size() > 1)
         {
             std::sort(temp.begin(), temp.end(), [x4, y4](sf::Vector2f one, sf::Vector2f two) {return pow(x4-one.x,2) + pow(y4-one.y,2) < pow(x4-two.x,2) + pow(y4-two.y,2);});
-            //insersection.emplace_back(temp);
+//            insersection.emplace_back(temp);
             for(auto& poin : current_points)
             {
                 if((temp[0].x == poin.x && temp[0].y == poin.y) ||
@@ -67,15 +70,21 @@ void maska::intersection_point()
                         (temp[1].x == poin.x && temp[1].y == poin.y))
                 {
                     insersection.emplace_back(temp);
+
+                    //test
+                    for(auto& el : temp)
+                        points_repeat.emplace_back(el);
+
+                    //test
                     break;
                 }
             }
         }
-        for(auto& el : temp)
-            points_repeat.emplace_back(el);
+//        for(auto& el : temp)
+//            points_repeat.emplace_back(el);
 
     }
-        //std::cout << insersection.size() << std::endl;
+//        std::cout << "inter : " <<insersection.size() << std::endl;
 
 }
 
@@ -122,12 +131,14 @@ void maska::sort_vector()
     }
     sorted.emplace_back(sorted[0]);
     insersection =  sorted;
+//    std::cout << "inter : " <<insersection.size() << std::endl;
+
 }
 
 void maska::off_set()
 {
     off_set_point.clear();
-    std::vector<std::pair<size_t, size_t>> val;
+//    std::vector<std::pair<size_t, size_t>> val;
     float x4 = Player_pos.x;
     float y4 = Player_pos.y;
 
@@ -201,7 +212,7 @@ void maska::off_set()
             off_set_point.emplace_back(temp[0]);
         //}
     }
-    //std::cout << off_set_point.size() << std::endl;
+//    std::cout << "off : " << off_set_point.size() << std::endl;
 
 }
 
@@ -233,18 +244,26 @@ std::vector<sf::ConvexShape> maska::Vec_mask()
 
             for(size_t id_s = 0; id_s < insersection[i-1].size(); id_s ++)
             {
+                maska.setFillColor(sf::Color(50,50,50));
+
                 if(insersection[i][id_f].x == off_set_point[i-1].x && insersection[i-1][id_s].x == off_set_point[i-1].x)
                 {
                     idx_first = id_f;
                     idx_sec = id_s;
                     next = true;
+                    maska.setFillColor(sf::Color(50,50,50));
+
+                    //maska.setFillColor(sf::Color::Red);
                     break;
                 }
-                if(insersection[i][id_f].y == off_set_point[i-1].y && insersection[i-1][id_s].y == off_set_point[i-1].y)
+                else if(insersection[i][id_f].y == off_set_point[i-1].y && insersection[i-1][id_s].y == off_set_point[i-1].y)
                 {
                     idx_first = id_f;
                     idx_sec = id_s;
                     next = true;
+                    maska.setFillColor(sf::Color(20,20,20));
+
+//                    maska.setFillColor(sf::Color::Blue);
                     break;
                 }
             }

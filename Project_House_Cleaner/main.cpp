@@ -7,7 +7,7 @@
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "window");
-    //window.setFramerateLimit(60);
+    window.setFramerateLimit(30);
     sf::Clock cl;
 
 
@@ -48,8 +48,6 @@ int main()
             view.move(0,-150*el.asSeconds()*2);
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
             view.move(0,150*el.asSeconds()*2);
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-            view.setCenter(mapa.door[1].rect.getGlobalBounds().left,mapa.door[2].rect.getGlobalBounds().top);
 
         window.setView(view);
         mysz = window.mapPixelToCoords(sf::Mouse::getPosition(window)); // pozycja
@@ -61,18 +59,6 @@ int main()
         for(auto& el : Maska.Vec_mask())
             window.draw(el);
 
-//        mapa.test_Draw(window);
-//        for(size_t i = 0; i < Maska.insersection.size(); i+=+1)
-//        {
-//            sf::Vertex line[] =
-//            {
-//                sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window))),
-//                //sf::Vertex(temp[i+1]),
-//                sf::Vertex(Maska.insersection[i][0])
-//            };
-
-//            window.draw(line, 2, sf::Lines);
-//        }
 
         window.display();
 //        std::cout << 1/el.asSeconds() << std::endl;
@@ -80,25 +66,26 @@ int main()
     }
 }
 
-//for(size_t i = 0; i < Maska.insersection.size(); i+=+1)
-//{
-//    sf::Vertex line[] =
-//    {
-//        sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window))),
-//        //sf::Vertex(temp[i+1]),
-//        sf::Vertex(Maska.insersection[i][Maska.insersection[i].size()])
-//    };
+//mapa.test_Draw(window);
+//        for(size_t i = 0; i < Maska.insersection.size(); i+=+1)
+//        {
+//            sf::Vertex line[] =
+//            {
+////                sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window))),
+//                sf::Vertex(Maska.insersection[i][0]),
+//                sf::Vertex(Maska.insersection[i][1])
+//            };
 
-//    window.draw(line, 2, sf::Lines);
-//}
-//for(size_t i = 0; i < Maska.off_set_point.size(); i+=+1)
-//{
-//    sf::Vertex line[] =
-//    {
-//        sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window)),sf::Color::Red),
-//        //sf::Vertex(temp[i+1]),
-//        sf::Vertex(Maska.off_set_point[i],sf::Color::Red)
-//    };
+//            window.draw(line, 2, sf::Lines);
+//        }
+//        for(size_t i = 0; i < Maska.off_set_point.size(); i+=+1)
+//        {
+//            sf::Vertex line[] =
+//            {
+//                sf::Vertex(window.mapPixelToCoords(sf::Mouse::getPosition(window)),sf::Color::Red),
+//                //sf::Vertex(temp[i+1]),
+//                sf::Vertex(Maska.off_set_point[i],sf::Color::Red)
+//            };
 
-//    window.draw(line, 2, sf::Lines);
-//}
+//            window.draw(line, 2, sf::Lines);
+//        }
