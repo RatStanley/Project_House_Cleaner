@@ -21,12 +21,6 @@ public:
     maska();
     std::vector<sf::ConvexShape> Vec_mask();
     void set_point(Map &m, sf::RectangleShape &view, sf::Vector2f pos, sf::Time cl);
-
-
-
-
-
-
 };
 
 #endif // MASKA_H

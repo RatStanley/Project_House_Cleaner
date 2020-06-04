@@ -317,10 +317,9 @@ sf::Vector2f Map::intersection(std::pair<sf::Vector2f, sf::Vector2f> one, std::p
     {
         float t = L_t/M_t;
         float u = -l_u/m_u;
-//        std::cout << u << '\t' << t << std::endl;
         if(0<=t && t <= 1 && 0<= u && u <= 1)
         {
-            return sf::Vector2f(x3+u*(x4-x3),y3 + u*(y4-y3));//cord;//sf::Vector2f(x1+t*(x2-x1),y1+t*(y2-y1));
+            return sf::Vector2f(x3+u*(x4-x3),y3 + u*(y4-y3));
         }
     }
     return sf::Vector2f(0,0);

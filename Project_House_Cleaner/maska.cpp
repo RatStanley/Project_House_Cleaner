@@ -71,20 +71,16 @@ void maska::intersection_point()
                 {
                     insersection.emplace_back(temp);
 
-                    //test
                     for(auto& el : temp)
                         points_repeat.emplace_back(el);
 
-                    //test
                     break;
                 }
             }
         }
-//        for(auto& el : temp)
-//            points_repeat.emplace_back(el);
+
 
     }
-//        std::cout << "inter : " <<insersection.size() << std::endl;
 
 }
 
@@ -131,14 +127,11 @@ void maska::sort_vector()
     }
     sorted.emplace_back(sorted[0]);
     insersection =  sorted;
-//    std::cout << "inter : " <<insersection.size() << std::endl;
-
 }
 
 void maska::off_set()
 {
     off_set_point.clear();
-//    std::vector<std::pair<size_t, size_t>> val;
     float x4 = Player_pos.x;
     float y4 = Player_pos.y;
 
@@ -205,14 +198,9 @@ void maska::off_set()
                 }
             }
         }
-
-        //if(temp.size() > 1)
-        //{
             std::sort(temp.begin(), temp.end(), [x4, y4](sf::Vector2f one, sf::Vector2f two) {return pow(x4-one.x,2) + pow(y4-one.y,2) < pow(x4-two.x,2) + pow(y4-two.y,2);});
             off_set_point.emplace_back(temp[0]);
-        //}
     }
-//    std::cout << "off : " << off_set_point.size() << std::endl;
 
 }
 
@@ -230,13 +218,14 @@ std::vector<sf::ConvexShape> maska::Vec_mask()
     std::vector<sf::ConvexShape> vec;
     sf::ConvexShape maska;
     maska.setFillColor(sf::Color(50,50,50));
+//    maska.setFillColor(sf::Color::Black);
+
 
 
     for(size_t i = 1; i < insersection.size(); i++)
     {
         size_t idx_first = 0;
         size_t idx_sec = 0;
-        maska.setFillColor(sf::Color(50,50,50));
 
         for(size_t id_f = 0; id_f < insersection[i].size(); id_f ++)
         {
@@ -244,16 +233,11 @@ std::vector<sf::ConvexShape> maska::Vec_mask()
 
             for(size_t id_s = 0; id_s < insersection[i-1].size(); id_s ++)
             {
-                maska.setFillColor(sf::Color(50,50,50));
-
                 if(insersection[i][id_f].x == off_set_point[i-1].x && insersection[i-1][id_s].x == off_set_point[i-1].x)
                 {
                     idx_first = id_f;
                     idx_sec = id_s;
                     next = true;
-                    maska.setFillColor(sf::Color(50,50,50));
-
-                    //maska.setFillColor(sf::Color::Red);
                     break;
                 }
                 else if(insersection[i][id_f].y == off_set_point[i-1].y && insersection[i-1][id_s].y == off_set_point[i-1].y)
@@ -261,9 +245,6 @@ std::vector<sf::ConvexShape> maska::Vec_mask()
                     idx_first = id_f;
                     idx_sec = id_s;
                     next = true;
-                    maska.setFillColor(sf::Color(20,20,20));
-
-//                    maska.setFillColor(sf::Color::Blue);
                     break;
                 }
             }

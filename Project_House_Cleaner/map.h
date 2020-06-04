@@ -26,9 +26,12 @@ class Map
 protected:
     std::vector<Wall> Walls;
     Wall window_frame[2];
+    Wall door[3];
+
     std::vector<std::vector<int>> map_grid;
     const int pix_size = 60;
     float door_open_ = 2;
+    std::vector<sf::Vector2f> intersection_point;
 
     void Struct_wall(const sf::RectangleShape &bryla, int id);
     void convert_bitMap_to_grid(const char* file);
@@ -39,7 +42,6 @@ protected:
     void cheak_for_door_intersect();
     sf::Vector2f intersection(std::pair<sf::Vector2f, sf::Vector2f> one, std::pair<sf::Vector2f, sf::Vector2f> two);
     sf::Vector2f wall_length(size_t i,size_t j);
-    std::vector<sf::Vector2f> intersection_point;
 
 public:
     Map();//testowy konstruktor z testowym rozłożeniem ścian
@@ -53,7 +55,6 @@ public:
 
     void test_Draw(sf::RenderWindow &win);
     void door_move(sf::Vector2f pos, sf::Time cl);
-    Wall door[3];
 
 };
 
