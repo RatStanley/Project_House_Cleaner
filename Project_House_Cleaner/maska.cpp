@@ -267,8 +267,13 @@ void maska::set_point(Map &m, sf::RectangleShape &view, sf::Vector2f pos, sf::Ti
     current_points = m.point_on_screen;
     visible_walls = m.walls_on_screen;
     Player_pos = pos;
-    m.door_move(pos,cl);
-    if(m.elevator.getGlobalBounds().contains(pos))
-        std::cout<< "test" << std::endl;
+    m.elev[0].door_move(pos,cl);
+    m.elev[1].door_move(pos,cl);
+
+//    m.door_move(pos,cl);
+//    m.door_move(pos,cl);
+//    if(m.elevator.getGlobalBounds().contains(pos))
+//        std::cout<< "test" << std::endl;
+
 }
 

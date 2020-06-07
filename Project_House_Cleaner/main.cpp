@@ -1,6 +1,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <thread>
 
 #include "maska.h"
 #include "map.h"
@@ -12,8 +13,8 @@ int main()
 
 
     maska Maska;
-    Map mapa("../map_folder/test.bmp");// test.bmp lub map_1.bmp
-    //Map mapa;
+    Map mapa("../map_folder/test1.bmp");// test.bmp lub map_1.bmp test1 door_test
+//    Map mapa;
     sf::View view;
     view.setSize(1280,720);
 
@@ -34,9 +35,11 @@ int main()
         sf::Time el = cl.restart();
 
         sf::Event event;
-        while (window.pollEvent(event)) {
+        while (window.pollEvent(event))
+        {
             if (event.type == sf::Event::Closed)
                 window.close();
+
         }
 //logika
 
@@ -48,7 +51,18 @@ int main()
             view.move(0,-150*el.asSeconds()*2);
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
             view.move(0,150*el.asSeconds()*2);
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+        {
+            if(mapa.elev[0].tp_space.getGlobalBounds().contains(mysz) && mapa.elev[0].used == false)
+            {
+                mapa.set_new_Map(mapa.elev[0].level);
 
+            }
+            if(mapa.elev[1].tp_space.getGlobalBounds().contains(mysz) && mapa.elev[1].used == false)
+            {
+                mapa.set_new_Map(mapa.elev[1].level);
+            }
+        }
         window.setView(view);
         mysz = window.mapPixelToCoords(sf::Mouse::getPosition(window)); // pozycja
         Maska.set_point(mapa,View_rec,mysz,el);
@@ -59,6 +73,7 @@ int main()
         for(auto& el : Maska.Vec_mask())
             window.draw(el);
 
+        //mapa.test_Draw(window);
 
         window.display();
 //        std::cout << 1/el.asSeconds() << std::endl;
