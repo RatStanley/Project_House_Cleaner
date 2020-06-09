@@ -59,6 +59,7 @@ void Map::convert_bitMap_to_grid(const char* file) // funcka zczytuje grid z bit
         }
         map_grid.emplace_back(temp);
     }
+
 }
 
 void Map::grid_to_walls()
@@ -99,17 +100,17 @@ void Map::grid_to_walls()
             }
         }
     }
-//    for(size_t i = 0; i < map_grid.size(); i++)
-//    {
-//        for(size_t j = 0; j <map_grid[i].size(); j++)
-//        {
-//            if(map_grid[i][j] == 0)
-//                std::cout <<" ";
-//            else
-//                std::cout << map_grid[i][j];
-//        }
-//        std::cout << std::endl;
-//    }
+    for(size_t i = 0; i < map_grid.size(); i++)
+    {
+        for(size_t j = 0; j <map_grid[i].size(); j++)
+        {
+            if(map_grid[i][j] == 0)
+                std::cout <<"  ";
+            else
+                std::cout << " "<<map_grid[i][j];
+        }
+        std::cout << std::endl;
+    }
 }
 
 void Map::elevator_door(size_t i,size_t j)
@@ -121,8 +122,8 @@ void Map::elevator_door(size_t i,size_t j)
     bool next;
     static int elev_counter = 0;
 
-    temp_door_1.setFillColor(sf::Color::Red);
-    temp_door_2.setFillColor(sf::Color::Blue);
+//    temp_door_1.setFillColor(sf::Color::Red);
+//    temp_door_2.setFillColor(sf::Color::Blue);
 
 
     if(map_grid[i][j] == 3 && map_grid[i][j+1] == 3)
@@ -162,7 +163,7 @@ std::tuple<sf::RectangleShape, sf::RectangleShape,bool> Map::tp_space_detect(siz
     if(map_grid[i+1][j] == 2 || map_grid[i+1][j] == 4)
     {
         if(map_grid[i+1][j] == 4)
-            next = false;
+            next = true;
 
         temp_tp.setSize(sf::Vector2f(pix_size*3,pix_size*2.5));
         temp_tp.setPosition(j*pix_size+100,(i+1)*pix_size+100+pix_size*0.5);
@@ -186,7 +187,7 @@ std::tuple<sf::RectangleShape, sf::RectangleShape,bool> Map::tp_space_detect(siz
     else if(map_grid[i-1][j] == 2 || map_grid[i-1][j] == 4)
     {
         if(map_grid[i-1][j] == 4)
-            next = false;
+            next = true;
 
         temp_tp.setSize(sf::Vector2f(pix_size*3,pix_size*2.5));
         temp_tp.setPosition(j*pix_size+100,(i-3)*pix_size+100);
@@ -463,9 +464,10 @@ Map::Map(const char *file)
     elev[1].refresh_walls(1);
 //    elev->refresh_walls(1);
 
+
+
     cheak_for_intersect();
     cheak_for_door_intersect();
-
 }
 
 void Map::set_curent_visible(sf::RectangleShape view)
@@ -535,66 +537,31 @@ void Map::set_curent_visible(sf::RectangleShape view)
 void Map::test_Draw(sf::RenderWindow &win)
 {
 
+    win.draw(window_frame[0].rect);
+//    for(auto& el : Walls)
+//        win.draw(el.rect);
 
-    for(auto& el : Walls)
-        win.draw(el.rect);
+//    sf::RectangleShape test;
+//    test.setSize(sf::Vector2f(10,10));
+//    test.setFillColor(sf::Color::Red);
+//    test.setOrigin(5,5);
+//    for(auto& el : intersection_point)
+//    {
+//        test.setPosition(el);
+//        win.draw(test);
+//    }
+//        win.draw(elev[0].door[0]);
+//        win.draw(elev[0].door[1]);
 
-    sf::RectangleShape test;
-    test.setSize(sf::Vector2f(10,10));
-    test.setFillColor(sf::Color::Red);
-    test.setOrigin(5,5);
-    for(auto& el : intersection_point)
-    {
-        test.setPosition(el);
-        win.draw(test);
-    }
-        win.draw(elev[0].door[0]);
-        win.draw(elev[0].door[1]);
-
-        win.draw(elev[1].door[0]);
-        win.draw(elev[1].door[1]);
+//        win.draw(elev[1].door[0]);
+//        win.draw(elev[1].door[1]);
 //    win.draw(elev[0].open_zone);
-
-
 //    win.draw(elev[1].open_zone);
 //    win.draw(elev[0].tp_space);
 //    win.draw(elev[1].tp_space);
 
-
 }
 
-//void Map::operator()()
-//{
-//    if(level != actual_level)
-//    {
-//        actual_level = level;
-//        std::cout << "test";
-//        Map *Temp;
-//        Temp = new Map;
-//        Temp->convert_bitMap_to_grid("../map_folder/door_test2.bmp");
-//        Temp->grid_to_walls();
-
-//        Temp->elev[0].refresh_walls(0);
-//        Temp->elev[0].refresh_walls(1);
-//        Temp->elev[1].refresh_walls(0);
-//        Temp->elev[1].refresh_walls(1);
-//    //    elev->refresh_walls(1);
-
-//       Temp->cheak_for_intersect();
-//       Temp->cheak_for_door_intersect();
-
-//       Walls = Temp->Walls;
-//       map_grid = Temp->map_grid;
-//       intersection_point = Temp->intersection_point;
-//       window_frame[0] = Temp->window_frame[0];
-//       window_frame[1] = Temp->window_frame[1];
-//       elev[0] = Temp->elev[0];
-//       elev[1] = Temp->elev[1];
-
-
-//       delete Temp;
-//    }
-//}
 //"../map_folder/door_test2.bmp"
 void Map::set_new_Map(int level)
 {
@@ -604,7 +571,7 @@ void Map::set_new_Map(int level)
         actual_level = level;
         std::cout << "test";
         Map *Temp;
-        Temp = new Map("../map_folder/test2.bmp");
+        Temp = new Map("../map_folder/MAP2.bmp");
         //Temp->convert_bitMap_to_grid("../map_folder/door_test2.bmp");
         //Temp->grid_to_walls();
 

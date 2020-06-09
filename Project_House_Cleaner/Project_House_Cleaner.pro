@@ -4,6 +4,9 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        Weapons/weapon.cpp \
+        Character/character.cpp \
+        Character/hero.cpp \
         main.cpp \
         map.cpp \
         maska.cpp
@@ -19,5 +22,8 @@ CONFIG(debug, debug|release){
 
 HEADERS += \
     BMP.h \
+    Weapons/weapon.h \
+    Character/character.h \
+    Character/hero.h \
     map.h \
     maska.h

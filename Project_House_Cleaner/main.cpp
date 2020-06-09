@@ -5,15 +5,17 @@
 
 #include "maska.h"
 #include "map.h"
+#include "Character/character.h"
+#include "Character/hero.h"
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "window");
     window.setFramerateLimit(30);
     sf::Clock cl;
 
-
     maska Maska;
-    Map mapa("../map_folder/test1.bmp");// test.bmp lub map_1.bmp test1 door_test
+    Map mapa("../map_folder/MAP1.bmp");// test.bmp lub map_1.bmp test1 door_test
 //    Map mapa;
     sf::View view;
     view.setSize(1280,720);
@@ -28,6 +30,10 @@ int main()
     //View_rec.setFillColor(sf::Color::Red);
 
 
+    Hero test;
+
+
+
 
 
     while(window.isOpen())
@@ -39,14 +45,20 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+            if(event.mouseButton.button == sf::Mouse::Left)
+                test.attack();
+
 
         }
 //logika
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            //test.move(-350*el.asSeconds()*2,0);
             view.move(-150*el.asSeconds()*2,0);
+        }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            view.move(350*el.asSeconds()*2,0);
+            view.move(150*el.asSeconds()*2,0);
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
             view.move(0,-150*el.asSeconds()*2);
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
@@ -64,17 +76,26 @@ int main()
             }
         }
         window.setView(view);
+
         mysz = window.mapPixelToCoords(sf::Mouse::getPosition(window)); // pozycja
-        Maska.set_point(mapa,View_rec,mysz,el);
+
+        Maska.set_point(mapa,View_rec,test.getPosition(),el);
+
+        test.setPosition(view.getCenter());
+
         View_rec.setPosition(view.getCenter());
+
+        test.face_to(mysz);
 //rysuj
-        window.clear(sf::Color::Black);
+        window.clear(sf::Color(50,50,50));
+
+
+//        mapa.test_Draw(window);
 
         for(auto& el : Maska.Vec_mask())
             window.draw(el);
 
-        //mapa.test_Draw(window);
-
+        window.draw(test);
         window.display();
 //        std::cout << 1/el.asSeconds() << std::endl;
 

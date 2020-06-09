@@ -217,8 +217,8 @@ std::vector<sf::ConvexShape> maska::Vec_mask()
 
     std::vector<sf::ConvexShape> vec;
     sf::ConvexShape maska;
-    maska.setFillColor(sf::Color(50,50,50));
-//    maska.setFillColor(sf::Color::Black);
+//    maska.setFillColor(sf::Color(50,50,50));
+    maska.setFillColor(sf::Color::Black);
 
 
 
