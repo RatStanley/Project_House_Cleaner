@@ -39,6 +39,11 @@ void Character::face_to(sf::Vector2f aim)
     setRotation(angle-90);
 }
 
+//void Character::update_status(sf::Time tm)
+//{
+
+//}
+
 Character::Character()
 {
 //    load_texture("../texture/MainCharacter.png");

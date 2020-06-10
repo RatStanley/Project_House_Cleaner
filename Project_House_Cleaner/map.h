@@ -81,6 +81,8 @@ public:
     std::vector<sf::Vector2f> point_on_screen;
     std::vector<std::pair<sf::Vector2f, sf::Vector2f>> walls_on_screen;
     Elevator elev[2];
+
+    std::vector<sf::Vector2f> enemy_pos;
 };
 
 #endif // MAP_H

@@ -40,6 +40,7 @@ void Map::convert_bitMap_to_grid(const char* file) // funcka zczytuje grid z bit
                                             {{0,255,0},"3"},//drzwi od windy
                                             {{0,0,255},"4"},//zurzyty tp
                                             {{255,0,255},"5"},
+                                            {{255,255,0},"6"},
                                           };
 
     BMP bmp(file);
@@ -97,6 +98,10 @@ void Map::grid_to_walls()
             if(map_grid[i][j] == 3)
             {
                 elevator_door(i,j);
+            }
+            if(map_grid[i][j] == 6)
+            {
+                enemy_pos.emplace_back(i*pix_size+100,i*pix_size+100);
             }
         }
     }
