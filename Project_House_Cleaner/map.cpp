@@ -105,17 +105,17 @@ void Map::grid_to_walls()
             }
         }
     }
-    for(size_t i = 0; i < map_grid.size(); i++)
-    {
-        for(size_t j = 0; j <map_grid[i].size(); j++)
-        {
-            if(map_grid[i][j] == 0)
-                std::cout <<"  ";
-            else
-                std::cout << " "<<map_grid[i][j];
-        }
-        std::cout << std::endl;
-    }
+//    for(size_t i = 0; i < map_grid.size(); i++)
+//    {
+//        for(size_t j = 0; j <map_grid[i].size(); j++)
+//        {
+//            if(map_grid[i][j] == 0)
+//                std::cout <<"  ";
+//            else
+//                std::cout << " "<<map_grid[i][j];
+//        }
+//        std::cout << std::endl;
+//    }
 }
 
 void Map::elevator_door(size_t i,size_t j)

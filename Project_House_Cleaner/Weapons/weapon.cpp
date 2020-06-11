@@ -5,10 +5,8 @@ void Weapon::Reload_Animation()
     int i = 0;
     for(auto& frame : Reload_animation_pos)
     {
-        animation_end = true;
         if(frame == *Reload_animation_pos.end())
         {
-            animation_end = false;
             animation_time = sf::Time::Zero;
         }
         if(animation_time.asMilliseconds() >150*i)
@@ -19,46 +17,73 @@ void Weapon::Reload_Animation()
 
 void Weapon::Shot_Animation()
 {
-//    int i = 0;
-//    for(auto& frame : shot_animation_pos)
-//    {
-////        animation_end = true;
-////        if(frame == *shot_animation_pos.end())
-////        {
-////            animation_end = false;
-////            shot = false;
-////        }
-//        if(animation_time.asSeconds() <0.15*i && animation_time.asSeconds() <0.15*(i+1))
-//            current_Frame =  frame;
-//        if(animation_time.asSeconds() >0.60*i)
-//        {
-//            shot = false;
-//            animation_time = sf::Time::Zero;
-//        }
-//        i++;
-//    }
-//    if(animation_time.asSeconds() < 0.0010 && animation_time.asSeconds() >= 0)
-//        current_Frame = shot_animation_pos[0];
-//    if(animation_time.asSeconds() < 0.0020 && animation_time.asSeconds() >= 0.0010)
-//        current_Frame = shot_animation_pos[1];
-//    if(animation_time.asSeconds() < 0.0030 && animation_time.asSeconds() >= 0.0020)
-//        current_Frame = shot_animation_pos[2];
-//    if(animation_time.asSeconds() >= 0.0030)
-//    {
-//        current_Frame = idle;
-//        shot = false;
-//        animation_time = sf::Time::Zero;
-//    }
-    if(animation_time.asSeconds() < 0.0010 && animation_time.asSeconds() >= 0)
-        current_Frame = shot_animation_pos[0];
-    if(animation_time.asSeconds() < 0.0020 && animation_time.asSeconds() >= 0.0010)
-        current_Frame = shot_animation_pos[1];
-    if(animation_time.asSeconds() < 0.0030 && animation_time.asSeconds() >= 0.0020)
-        current_Frame = shot_animation_pos[2];
-    if(animation_time.asSeconds() >= 0.0030)
+    if(animation_time.asSeconds() > 0.030)
     {
-        current_Frame = idle;
-        shot = false;
+        if(current_frame >= shot_animation_pos.size()-1)
+        {
+            current_Frame = idle;
+            if(shot_delay <= current_frame)
+            {
+                shot = false;
+                current_frame = 0;
+            }
+            else
+                current_frame++;
+        }
+        else
+        {
+            current_Frame = shot_animation_pos[current_frame];
+            current_frame++;
+        }
+        animation_time = sf::Time::Zero;
+    }
+}
+
+void Weapon::Change_Animation()
+{
+    change_weapon = true;
+    if(active == true)
+        put_your_weapon_away();
+    else if(active == false)
+        draw_your_weapon();
+}
+
+void Weapon::draw_your_weapon()
+{
+    if(animation_time.asSeconds() > 0.050)
+    {
+        if(current_Frame == Change_Animation_pos[0])
+        {
+            current_Frame = Change_Animation_pos[0];
+            change_weapon = false;
+            current_frame = 0;
+            active = true;
+        }
+        else
+        {
+            current_Frame = Change_Animation_pos[current_frame];
+            current_frame--;
+        }
+        animation_time = sf::Time::Zero;
+    }
+}
+
+void Weapon::put_your_weapon_away()
+{
+    if(animation_time.asSeconds() > 0.050)
+    {
+        if(current_Frame == Change_Animation_pos[1])
+        {
+            current_Frame = Change_Animation_pos[1];
+            change_weapon = false;
+            current_frame = 0;
+            active = false;
+        }
+        else
+        {
+            current_Frame = Change_Animation_pos[current_frame];
+            current_frame++;
+        }
         animation_time = sf::Time::Zero;
     }
 }
@@ -68,6 +93,9 @@ Weapon::Weapon()
     shot = false;
     reload = false;
     animation_time = sf::Time::Zero;
+    current_frame = 0;
+    active = false;
+    change_weapon = false;
 }
 
 Weapon::~Weapon()
@@ -77,16 +105,35 @@ Weapon::~Weapon()
 
 void Weapon::Shot()
 {
-    shot = true;
+        if(shot == false)
+            current_frame = 0;
+        shot = true;
+}
+
+void Weapon::Change()
+{
+        if(active)
+        {
+            current_frame = 0;
+        }
+        else
+        {
+            current_frame = 1;
+        }
+        change_weapon = true;
 }
 
 sf::Vector2i Weapon::Animation(sf::Time tm)
 {
-    std::cout << animation_time.asSeconds() << std::endl;
     if(shot)
     {
-        animation_time+=tm;
+        animation_time=tm;
         Shot_Animation();
+    }
+    else if(change_weapon)
+    {
+        animation_time+=tm;
+        Change_Animation();
     }
     else
         return idle;

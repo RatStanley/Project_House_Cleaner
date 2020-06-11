@@ -14,7 +14,6 @@ void Character::load_texture(const char* file)
     setTextureRect(sf::IntRect(0,0,48,32));
     setPosition(600,600);
     setOrigin(24,16);
-
 }
 
 void Character::face_to(sf::Vector2f aim)
@@ -39,15 +38,8 @@ void Character::face_to(sf::Vector2f aim)
     setRotation(angle-90);
 }
 
-//void Character::update_status(sf::Time tm)
-//{
-
-//}
-
 Character::Character()
 {
-//    load_texture("../texture/MainCharacter.png");
-//    hit_box = sf::FloatRect(getGlobalBounds().left-60,getGlobalBounds().left-60,getGlobalBounds().width+120,getGlobalBounds()+120);
 
 }
 

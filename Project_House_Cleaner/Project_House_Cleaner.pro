@@ -5,7 +5,9 @@ CONFIG -= qt
 
 SOURCES += \
         Character/enemy_1.cpp \
+        Weapons/machinegun.cpp \
         Weapons/pistol.cpp \
+        Weapons/shotgun.cpp \
         Weapons/weapon.cpp \
         Character/character.cpp \
         Character/hero.cpp \
@@ -26,7 +28,9 @@ CONFIG(debug, debug|release){
 HEADERS += \
     BMP.h \
     Character/enemy_1.h \
+    Weapons/machinegun.h \
     Weapons/pistol.h \
+    Weapons/shotgun.h \
     Weapons/weapon.h \
     Character/character.h \
     Character/hero.h \

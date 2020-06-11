@@ -7,7 +7,7 @@ class Pistol : public Weapon
 {
 public:
     Pistol();
-    void Reload_Animation(sf::Time tm);
+//    void Reload_Animation(sf::Time tm);
 };
 
 #endif // PISTOL_H

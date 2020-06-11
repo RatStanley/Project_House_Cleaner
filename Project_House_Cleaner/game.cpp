@@ -21,8 +21,6 @@ void Game::Game_loop()
         sf::Event event;
         Events(event);
 
-
-
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
             view.move(-150*el.asSeconds()*2,0);
@@ -45,33 +43,24 @@ void Game::Game_loop()
                 mapa->set_new_Map(mapa->elev[1].level);
             }
         }
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            hero->attack();
 
         window->setView(view);
-
         mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window)); // pozycja
-
         Maska->set_point(*mapa,View_rec,hero->getPosition(),el);
-
         hero->setPosition(view.getCenter());
-        sf::Time temp = clock.restart();
-        hero->update_status(temp);
-
+        hero->update_status(el);
         View_rec.setPosition(view.getCenter());
-
         hero->face_to(mouse_pos);
 //rysuj
         window->clear(sf::Color(50,50,50));
-
-
-//        mapa.test_Draw(window); ??
-
+//        mapa.test_Draw(window); debug
         for(auto& el : Maska->Vec_mask())
             window->draw(el);
-
         window->draw(*hero);
         window->display();
 //        std::cout << 1/el.asSeconds() << std::endl;
-
     }
 }
 
@@ -86,9 +75,11 @@ void Game::Events(sf::Event event)
     {
         if (event.type == sf::Event::Closed)
             window->close();
-        if(event.mouseButton.button == sf::Mouse::Left)
-            hero->attack();
-
-
+        if(event.key.code == sf::Keyboard::Num1)
+            hero->Weapon_Change(1);
+        if(event.key.code == sf::Keyboard::Num2)
+            hero->Weapon_Change(2);
+        if(event.key.code == sf::Keyboard::Num3)
+            hero->Weapon_Change(3);
     }
 }
