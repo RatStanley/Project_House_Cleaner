@@ -23,6 +23,11 @@ void Hero::attack()
     current_weapon->Shot();
 }
 
+void Hero::reload()
+{
+    current_weapon->Reload();
+}
+
 void Hero::Weapon_Change(int id)
 {
     if(id == 1)

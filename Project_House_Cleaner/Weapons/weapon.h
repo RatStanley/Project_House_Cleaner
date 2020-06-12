@@ -8,9 +8,17 @@
 
 enum class weapon_type
 {
-    Pistol = 1,
-    MachineGun = 2,
-    ShotGun = 3
+    Pistol,
+    MachineGun,
+    ShotGun
+};
+
+enum class Animation_type
+{
+    Reload,
+    Shot,
+    Change,
+    idle
 };
 
 class Weapon
@@ -20,13 +28,11 @@ protected:
     float angle;
     unsigned int rays_count;
     int max_ammo;
-    int current_frame;
-    int shot_delay;
+    int ammo;
+    size_t current_frame;
+    size_t shot_delay;
 
-    bool animation_end;
-    bool shot;
-    bool reload;
-    bool change_weapon;
+    Animation_type anim_type;
 
     sf::Time animation_time;
     sf::Vector2i current_Frame;
@@ -37,7 +43,7 @@ protected:
     sf::RectangleShape barrel;
 
     void Reload_Animation();
-    void  Shot_Animation();
+    void Shot_Animation();
     void Change_Animation();
     void draw_your_weapon();
     void put_your_weapon_away();
@@ -47,6 +53,7 @@ public:
     void hit_scan();
     void Shot();
     void Change();
+    void Reload();
     sf::Vector2i Animation(sf::Time cl);
     bool active;
 //    friend void deal_dmg(Character &ch,Map &m);

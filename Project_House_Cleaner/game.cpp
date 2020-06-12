@@ -21,28 +21,17 @@ void Game::Game_loop()
         sf::Event event;
         Events(event);
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         {
             view.move(-150*el.asSeconds()*2,0);
         }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
             view.move(150*el.asSeconds()*2,0);
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
             view.move(0,-150*el.asSeconds()*2);
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
             view.move(0,150*el.asSeconds()*2);
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::E))
-        {
-            if(mapa->elev[0].tp_space.getGlobalBounds().contains(mouse_pos) && mapa->elev[0].used == false)
-            {
-                mapa->set_new_Map(mapa->elev[0].level);
 
-            }
-            if(mapa->elev[1].tp_space.getGlobalBounds().contains(mouse_pos) && mapa->elev[1].used == false)
-            {
-                mapa->set_new_Map(mapa->elev[1].level);
-            }
-        }
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
             hero->attack();
 
@@ -81,5 +70,19 @@ void Game::Events(sf::Event event)
             hero->Weapon_Change(2);
         if(event.key.code == sf::Keyboard::Num3)
             hero->Weapon_Change(3);
+        if(event.key.code == sf::Keyboard::R)
+            hero->reload();
+        if(event.key.code == sf::Keyboard::E)//(sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+        {
+            if(mapa->elev[0].tp_space.getGlobalBounds().contains(hero->getPosition()) && mapa->elev[0].used == false)
+            {
+                mapa->set_new_Map(mapa->elev[0].level);
+
+            }
+            if(mapa->elev[1].tp_space.getGlobalBounds().contains(hero->getPosition()) && mapa->elev[1].used == false)
+            {
+                mapa->set_new_Map(mapa->elev[1].level);
+            }
+        }
     }
 }

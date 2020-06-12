@@ -20,6 +20,7 @@ public:
     Hero();
     void movement();
     void attack();
+    void reload();
     void Weapon_Change(int id);
     void update_status(sf::Time tm);
 };

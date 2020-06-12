@@ -5,8 +5,11 @@
 
 class ShotGun : public Weapon
 {
+
+
 public:
     ShotGun();
+    void Reload_Animation();
 };
 
 #endif // SHOTGUN_H
