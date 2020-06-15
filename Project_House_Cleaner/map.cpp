@@ -479,6 +479,7 @@ void Map::set_curent_visible(sf::RectangleShape view)
 {
     point_on_screen.clear();
     walls_on_screen.clear();
+    Wall_cols.clear();
 
     //    point_on_screen = intersection_point;
     for(auto& el: intersection_point)
@@ -528,6 +529,7 @@ void Map::set_curent_visible(sf::RectangleShape view)
     {
         if(view.getGlobalBounds().intersects(el.rect.getGlobalBounds()))
         {
+            Wall_cols.emplace_back(el.rect);
             for(size_t i = 0; i < 4; i++)
             {
                 point_on_screen.emplace_back(el.points[i]);

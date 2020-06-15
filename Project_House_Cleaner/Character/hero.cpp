@@ -10,7 +10,15 @@ Hero::Hero()
     texture_box.height = 32;
     current_weapon = &pistol;
     next_weapon = current_used;
-//    shot_blast.setRadius(120);
+
+    Hero_sprite.setTexture(texture);
+    Muzzle_flash.setTexture(texture);
+    Muzzle_flash.setOrigin(24,0);
+
+//    setPosition(737,629);
+//    shot_blast.setRadius(12);
+//    shot_blast.setOrigin(6,6);
+//    shot_blast.setFillColor(sf::Color(255,255,0,50));
 }
 
 void Hero::movement()
@@ -49,6 +57,8 @@ void Hero::Weapon_Change(int id)
 void Hero::update_status(sf::Time tm)
 {
     sf::Vector2i temp;
+    sf::Vector2i extra_temp;
+
     if(current_used != next_weapon && current_weapon->active == false)
     {
         if(next_weapon == weapon_type::Pistol)
@@ -70,8 +80,29 @@ void Hero::update_status(sf::Time tm)
             current_weapon->Change();
         }
     }
+
     temp = current_weapon->Animation(tm);
+    if(current_weapon->extra)
+    {
+        extra_temp = current_weapon->Extra_Animation();
+    }
+
     texture_box.top = temp.y;
     texture_box.left = temp.x;
-    setTextureRect(texture_box);
+
+//    setTextureRect(texture_box);
+    Hero_sprite.setTextureRect(texture_box);
+
+    texture_box.top = extra_temp.y;
+    texture_box.left = extra_temp.x;
+
+    Muzzle_flash.setTextureRect(texture_box);
+}
+
+void Hero::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+    states.transform *= getTransform();
+    target.draw(Hero_sprite,states);
+    if(current_weapon->extra)
+        target.draw(Muzzle_flash,states);
 }

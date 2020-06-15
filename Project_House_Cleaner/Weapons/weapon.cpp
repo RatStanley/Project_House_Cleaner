@@ -4,7 +4,7 @@ void Weapon::Reload_Animation()
 {
     if(animation_time.asSeconds() > 0.110)
     {
-        if(current_frame >= Reload_animation_pos.size()-1)
+        if(current_frame >= Reload_animation_pos.size())
         {
             current_Frame = idle;
             anim_type = Animation_type::idle;
@@ -24,20 +24,25 @@ void Weapon::Shot_Animation()
 {
     if(animation_time.asSeconds() > 0.030)
     {
-        if(current_frame >= shot_animation_pos.size()-1)
+        if(current_frame >= shot_animation_pos.size())
         {
             current_Frame = idle;
             if(shot_delay <= current_frame)
             {
                 anim_type = Animation_type::idle;
                 current_frame = 0;
+                extra = false;
             }
             else
+            {
+                extra = false;
                 current_frame++;
+            }
         }
         else
         {
             current_Frame = shot_animation_pos[current_frame];
+            extra_Frame = muzzle_flash_pos[current_frame];
             current_frame++;
         }
         animation_time = sf::Time::Zero;
@@ -98,6 +103,7 @@ Weapon::Weapon()
     current_frame = 0;
     active = false;
     anim_type = Animation_type::idle;
+    extra = false;
 }
 
 Weapon::~Weapon()
@@ -107,7 +113,7 @@ Weapon::~Weapon()
 
 void Weapon::Shot()
 {
-    if(anim_type == Animation_type::idle)
+    if(anim_type == Animation_type::idle || anim_type == Animation_type::Reload)
     {
         if(ammo != 0)
         {
@@ -115,9 +121,9 @@ void Weapon::Shot()
             {
                 current_frame = 0;
                 ammo--;
-                std::cout << ammo << std::endl;
             }
             anim_type = Animation_type::Shot;
+            extra = true;
         }
     }
 }
@@ -140,30 +146,39 @@ void Weapon::Change()
 
 void Weapon::Reload()
 {
-    if(ammo != max_ammo)
-        anim_type = Animation_type::Reload;
+    if(anim_type == Animation_type::idle)
+    {
+        if(ammo != max_ammo)
+            anim_type = Animation_type::Reload;
+    }
 }
 
 sf::Vector2i Weapon::Animation(sf::Time tm)
 {
+    animation_time+=tm;
     if(anim_type == Animation_type::Shot)
     {
-        animation_time=tm;
+//        animation_time=tm;
         Shot_Animation();
     }
     else if(anim_type == Animation_type::Change)
     {
-        animation_time+=tm;
+//        animation_time+=tm;
         Change_Animation();
     }
     else if(anim_type == Animation_type::Reload)
     {
-        animation_time+=tm;
+//        animation_time+=tm;
         Reload_Animation();
     }
     else
         return idle;
     return current_Frame;
+}
+
+sf::Vector2i Weapon::Extra_Animation()
+{
+    return extra_Frame;
 }
 
 

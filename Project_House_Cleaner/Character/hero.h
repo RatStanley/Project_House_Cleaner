@@ -15,6 +15,10 @@ class Hero : public Character
     ShotGun SG;
     weapon_type current_used;
     weapon_type next_weapon;
+
+    sf::Sprite Hero_sprite;
+    sf::Sprite Muzzle_flash;
+//    bool shot;
 //    sf::CircleShape shot_blast;
 public:
     Hero();
@@ -23,6 +27,7 @@ public:
     void reload();
     void Weapon_Change(int id);
     void update_status(sf::Time tm);
+    void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };
 
 #endif // HERP_H

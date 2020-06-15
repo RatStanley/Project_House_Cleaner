@@ -3,7 +3,7 @@
 Game::Game()
 {
     window = new sf::RenderWindow(sf::VideoMode(1280, 720), "window");
-    window->setFramerateLimit(30);
+    window->setFramerateLimit(60);
     Maska = new maska;
     mapa = new Map("../map_folder/MAP1.bmp");// test.bmp lub map_1.bmp test1 door_test
     hero = new Hero;
@@ -11,6 +11,9 @@ Game::Game()
     View_rec.setSize(sf::Vector2f(1280,720));
     View_rec.setPosition(View_rec.getSize().x/2,View_rec.getSize().y/2);
     View_rec.setOrigin(View_rec.getSize().x/2,View_rec.getSize().y/2);
+
+    hero->setPosition(737,629);
+    view.setCenter(hero->getPosition());
 }
 
 void Game::Game_loop()

@@ -36,13 +36,16 @@ protected:
 
     sf::Time animation_time;
     sf::Vector2i current_Frame;
+    sf::Vector2i extra_Frame;
     sf::Vector2i idle;
     std::vector<sf::Vector2i> Reload_animation_pos;
     std::vector<sf::Vector2i> shot_animation_pos;
     std::vector<sf::Vector2i> Change_Animation_pos;
+    std::vector<sf::Vector2i> muzzle_flash_pos;
+
     sf::RectangleShape barrel;
 
-    void Reload_Animation();
+    virtual void Reload_Animation();
     void Shot_Animation();
     void Change_Animation();
     void draw_your_weapon();
@@ -55,6 +58,8 @@ public:
     void Change();
     void Reload();
     sf::Vector2i Animation(sf::Time cl);
+    sf::Vector2i Extra_Animation();
+    bool extra;
     bool active;
 //    friend void deal_dmg(Character &ch,Map &m);
 };
