@@ -2,6 +2,7 @@
 #define WEAPON_H
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "Character/character.h"
 #include "map.h"
@@ -33,6 +34,8 @@ protected:
     size_t shot_delay;
 
     Animation_type anim_type;
+    sf::SoundBuffer shot_Buf;
+    sf::Sound shot_sound;
 
     sf::Time animation_time;
     sf::Vector2i current_Frame;

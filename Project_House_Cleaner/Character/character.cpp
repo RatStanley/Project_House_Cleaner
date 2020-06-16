@@ -114,7 +114,7 @@ void Character::point_contains_colison(std::vector<sf::RectangleShape> walls)
         {
             if(wall.getGlobalBounds().contains(point))
             {
-                std::cout << "tak" << std::endl;
+//                std::cout << "tak" << std::endl;
                 setPosition(pr_pos);
                 next = true;
                 break;

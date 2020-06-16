@@ -30,4 +30,8 @@ MachineGun::MachineGun()
     Change_Animation_pos.emplace_back(48,160);
 
     shot_delay = shot_animation_pos.size()-1;
+
+    if (!shot_Buf.loadFromFile("../sounds/M4A1_Single.wav"))
+            std::cout << "problem";
+    shot_sound.setBuffer(shot_Buf);
 }

@@ -124,6 +124,8 @@ void Weapon::Shot()
             }
             anim_type = Animation_type::Shot;
             extra = true;
+            shot_sound.setBuffer(shot_Buf);
+            shot_sound.play();
         }
     }
 }

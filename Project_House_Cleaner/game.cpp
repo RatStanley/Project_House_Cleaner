@@ -54,7 +54,7 @@ void Game::Game_loop()
 //        hero->setPosition(view.getCenter());
         hero->update_status(el);
 
-        hero->colision(mapa->Wall_cols);
+//        hero->colision(mapa->Wall_cols);
 
         View_rec.setPosition(hero->getPosition());
         view.setCenter(hero->getPosition());
@@ -103,6 +103,25 @@ void Game::Events(sf::Event event)
             {
                 mapa->set_new_Map(mapa->elev[1].level);
             }
+        }
+        if(event.key.code == sf::Keyboard::Space)
+        {
+            sf::SoundBuffer testtt;
+
+            if (!testtt.loadFromFile("../sounds/9_mm_gunshot.wav"))
+                    std::cout << "problem";
+        //    shot = testtt;
+            sf::Sound test2;
+            sf::Sound test;
+            test.setBuffer(testtt);
+            test.play();
+            if (test.getStatus() != sf::Sound::Playing)
+            {
+                std::cout << "co jest";
+                test.play();
+            }
+            else
+                std::cout << "co jes222t";
         }
     }
 }

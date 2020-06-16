@@ -28,4 +28,9 @@ Pistol::Pistol()
 
     Change_Animation_pos.emplace_back(0,96);
     Change_Animation_pos.emplace_back(48,96);
+
+
+    if (!shot_Buf.loadFromFile("../sounds/GUN_FIRE.wav")) // barreta_m9 , 9_mm_gunshot, GUN_FIRE
+            std::cout << "problem";
+    shot_sound.setBuffer(shot_Buf);
 }
