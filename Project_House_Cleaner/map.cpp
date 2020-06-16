@@ -514,6 +514,9 @@ void Map::set_curent_visible(sf::RectangleShape view)
     {
         if(view.getGlobalBounds().intersects(ele.door[0].getGlobalBounds()) || view.getGlobalBounds().intersects(ele.door[1].getGlobalBounds()))
         {
+            Wall_cols.emplace_back(ele.door[0]);
+            Wall_cols.emplace_back(ele.door[1]);
+
             for(size_t i = 0; i < 4; i++)
             {
                 point_on_screen.emplace_back(ele.points[0][i]);
@@ -521,7 +524,9 @@ void Map::set_curent_visible(sf::RectangleShape view)
 
             }
             for(auto& wall : ele.wall)
+            {
                 walls_on_screen.emplace_back(wall);
+            }
         }
     }
 
@@ -544,9 +549,9 @@ void Map::set_curent_visible(sf::RectangleShape view)
 void Map::test_Draw(sf::RenderWindow &win)
 {
 
-    win.draw(window_frame[0].rect);
-//    for(auto& el : Walls)
-//        win.draw(el.rect);
+//    win.draw(window_frame[0].rect);
+    for(auto& el : Walls)
+        win.draw(el.rect);
 
 //    sf::RectangleShape test;
 //    test.setSize(sf::Vector2f(10,10));

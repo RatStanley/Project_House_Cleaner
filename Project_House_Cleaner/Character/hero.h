@@ -18,11 +18,17 @@ class Hero : public Character
 
     sf::Sprite Hero_sprite;
     sf::Sprite Muzzle_flash;
+//    sf::RectangleShape character_bounds;
 //    bool shot;
 //    sf::CircleShape shot_blast;
+    void col_1(std::vector<sf::RectangleShape> walls);
+    void col_2(std::vector<sf::RectangleShape> walls);
+    void col_3(std::vector<sf::RectangleShape> walls);
+    void col_4(std::vector<sf::RectangleShape> walls);
+
 public:
     Hero();
-    void movement();
+    void movement(sf::Time el, std::vector<sf::RectangleShape> walls);
     void attack();
     void reload();
     void Weapon_Change(int id);

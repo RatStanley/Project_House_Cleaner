@@ -13,12 +13,16 @@ protected:
     float vel_y;
     float vel_x;
     sf::IntRect texture_box;
+    sf::RectangleShape character_bounds;
+
+    sf::Vector2f pr_pos;
     void load_texture(const char* file);
 public:
     Character();
-    void colision(sf::RectangleShape &el);
+    void colision(std::vector<sf::RectangleShape> walls);
+    void point_contains_colison(std::vector<sf::RectangleShape> walls);
     void face_to(sf::Vector2f aim);
-    virtual void movement() = 0;
+//    virtual void movement(sf::Time el);
     virtual void attack() = 0;
     void update_status(sf::Time tm);
 };

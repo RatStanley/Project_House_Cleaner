@@ -13,6 +13,7 @@ Game::Game()
     View_rec.setOrigin(View_rec.getSize().x/2,View_rec.getSize().y/2);
 
     hero->setPosition(737,629);
+//    hero->setPosition(2000,2000);
     view.setCenter(hero->getPosition());
 }
 
@@ -24,32 +25,48 @@ void Game::Game_loop()
         sf::Event event;
         Events(event);
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        {
-            view.move(-150*el.asSeconds()*2,0);
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-            view.move(150*el.asSeconds()*2,0);
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-            view.move(0,-150*el.asSeconds()*2);
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-            view.move(0,150*el.asSeconds()*2);
+        hero->movement(el,mapa->Wall_cols);
 
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-            hero->attack();
+//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+//        {
+////            view.move(-150*el.asSeconds()*2,0);
+//            hero->move(-150*el.asSeconds()*2,0);
+//        }
+//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+//        {
+////            view.move(150*el.asSeconds()*2,0);
+//            hero->move(150*el.asSeconds()*2,0);
+//        }
+//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+//        {
+////            view.move(0,-150*el.asSeconds()*2);
+//            hero->move(0,-150*el.asSeconds()*2);
+//        }
+//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+//        {
+////            view.move(0,150*el.asSeconds()*2);
+//            hero->move(0,150*el.asSeconds()*2);
+//        }
+//        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+//            hero->attack();
 
+        hero->face_to(mouse_pos);
+//        hero->setPosition(view.getCenter());
+        hero->update_status(el);
+
+        hero->colision(mapa->Wall_cols);
+
+        View_rec.setPosition(hero->getPosition());
+        view.setCenter(hero->getPosition());
         window->setView(view);
         mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window)); // pozycja
         Maska->set_point(*mapa,View_rec,hero->getPosition(),el);
-        hero->setPosition(view.getCenter());
-        hero->update_status(el);
-        View_rec.setPosition(view.getCenter());
-        hero->face_to(mouse_pos);
 //rysuj
-        window->clear(sf::Color(50,50,50));
-//        mapa.test_Draw(window); debug
+        window->clear(sf::Color(150,150,150));
         for(auto& el : Maska->Vec_mask())
             window->draw(el);
+//        mapa->test_Draw(*window); //debug
+
         window->draw(*hero);
         window->display();
 //        std::cout << 1/el.asSeconds() << std::endl;

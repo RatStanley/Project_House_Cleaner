@@ -40,40 +40,88 @@ void Character::face_to(sf::Vector2f aim)
 
 Character::Character()
 {
-
+    character_bounds.setSize(sf::Vector2f(70,70));
+    character_bounds.setOrigin(35,35);
+    character_bounds.setFillColor(sf::Color::Red);
 }
 
-void Character::colision(sf::RectangleShape &el)
+void Character::colision(std::vector<sf::RectangleShape> walls)
 {
-    if(getGlobalBounds().intersects(el.getGlobalBounds()))
+    character_bounds.setPosition(getPosition());
+//    character_bounds.setPosition(getPosition().x-35,getPosition().y-35);
+
+    for(auto& wall : walls)
     {
-        if(getGlobalBounds().left+getGlobalBounds().width*0.9 > el.getGlobalBounds().left &&
-                getGlobalBounds().left < el.getGlobalBounds().left+el.getGlobalBounds().width*0.9 &&
-                getGlobalBounds().top < el.getGlobalBounds().top)
+        if(character_bounds.getGlobalBounds().intersects(wall.getGlobalBounds()))
         {
-            setPosition(getGlobalBounds().left, el.getGlobalBounds().top-getGlobalBounds().height);
-            vel_y = 0;
-        }
-        else if(getGlobalBounds().top + getGlobalBounds().height*0.9 > el.getGlobalBounds().top &&
-                 getGlobalBounds().top < el.getGlobalBounds().top + el.getGlobalBounds().height*0.9 &&
-                 getGlobalBounds().left < el.getGlobalBounds().left)
-         {
-             setPosition(el.getGlobalBounds().left - getGlobalBounds().width, getGlobalBounds().top);
-             vel_x = 0;
-         }
-        else if(getGlobalBounds().top + getGlobalBounds().height*0.9 > el.getGlobalBounds().top &&
-                 getGlobalBounds().top < el.getGlobalBounds().top + el.getGlobalBounds().height*0.9 &&
-                 getGlobalBounds().left + getGlobalBounds().width/2 > el.getGlobalBounds().left + el.getGlobalBounds().width)
-         {
-             setPosition(el.getGlobalBounds().left + el.getGlobalBounds().width, getGlobalBounds().top);
-             vel_x = 0;
-         }
-        else if(getGlobalBounds().left+getGlobalBounds().width > el.getGlobalBounds().left &&
-                getGlobalBounds().left < el.getGlobalBounds().left+el.getGlobalBounds().width &&
-                getGlobalBounds().top > el.getGlobalBounds().top)
-        {
-            setPosition(getGlobalBounds().left, el.getGlobalBounds().top+el.getGlobalBounds().height);
-            vel_y = 0;
+//            std::cout << "test";
+            if(character_bounds.getGlobalBounds().left+character_bounds.getGlobalBounds().width > wall.getGlobalBounds().left &&
+                    character_bounds.getGlobalBounds().left < wall.getGlobalBounds().left+wall.getGlobalBounds().width &&
+                    character_bounds.getGlobalBounds().top  + getOrigin().y < wall.getGlobalBounds().top)
+            {
+                setPosition(character_bounds.getGlobalBounds().left+35, wall.getGlobalBounds().top-character_bounds.getGlobalBounds().height+35);
+//                vel_y = 0;
+                std::cout << "1" << std::endl;
+            }
+            else if(character_bounds.getGlobalBounds().left+character_bounds.getGlobalBounds().width > wall.getGlobalBounds().left &&
+                    character_bounds.getGlobalBounds().left < wall.getGlobalBounds().left+wall.getGlobalBounds().width &&
+                    character_bounds.getGlobalBounds().top > wall.getGlobalBounds().top)
+            {
+                setPosition(character_bounds.getGlobalBounds().left+35, wall.getGlobalBounds().top+wall.getGlobalBounds().height+35);
+//                vel_y = 0;
+                std::cout << "4" << std::endl;
+            }
+//            else if(character_bounds.getGlobalBounds().top + character_bounds.getGlobalBounds().height*0.9 > wall.getGlobalBounds().top &&
+//                    character_bounds.getGlobalBounds().top < wall.getGlobalBounds().top + wall.getGlobalBounds().height*0.9 &&
+//                    character_bounds.getGlobalBounds().left < wall.getGlobalBounds().left)
+//            {
+//                setPosition(wall.getGlobalBounds().left - character_bounds.getGlobalBounds().width+35, character_bounds.getGlobalBounds().top+35);
+////                vel_x = 0;
+//                std::cout << "2" << std::endl;
+//            }
+//            else if(character_bounds.getGlobalBounds().top + character_bounds.getGlobalBounds().height*0.9 > wall.getGlobalBounds().top &&
+//                    character_bounds.getGlobalBounds().top < wall.getGlobalBounds().top + wall.getGlobalBounds().height*0.9 &&
+//                    character_bounds.getGlobalBounds().left + character_bounds.getGlobalBounds().width/2 > wall.getGlobalBounds().left + wall.getGlobalBounds().width)
+//            {
+//                setPosition(wall.getGlobalBounds().left + wall.getGlobalBounds().width +35, character_bounds.getGlobalBounds().top+35);
+////                vel_x = 0;
+//                std::cout << "3" << std::endl;
+//            }
+
+////            if(vel_x == 0 && vel_y == 0)
+               break;
         }
     }
+}
+
+void Character::point_contains_colison(std::vector<sf::RectangleShape> walls)
+{
+    character_bounds.setPosition(getPosition());
+    sf::Vector2f points[] =
+    {
+        sf::Vector2f(character_bounds.getGlobalBounds().left,character_bounds.getGlobalBounds().top),
+        sf::Vector2f(character_bounds.getGlobalBounds().left + character_bounds.getGlobalBounds().width,character_bounds.getGlobalBounds().top),
+        sf::Vector2f(character_bounds.getGlobalBounds().left,character_bounds.getGlobalBounds().top + character_bounds.getGlobalBounds().height),
+        sf::Vector2f(character_bounds.getGlobalBounds().left + character_bounds.getGlobalBounds().width,character_bounds.getGlobalBounds().top + character_bounds.getGlobalBounds().height)
+    };
+    /// 1==2
+    /// |  |
+    /// 3==4
+    bool next = false;
+    for(auto& point : points)
+    {
+        for(auto& wall : walls)
+        {
+            if(wall.getGlobalBounds().contains(point))
+            {
+                std::cout << "tak" << std::endl;
+                setPosition(pr_pos);
+                next = true;
+                break;
+            }
+        }
+        if(next)
+            break;
+    }
+    pr_pos = getPosition();
 }
