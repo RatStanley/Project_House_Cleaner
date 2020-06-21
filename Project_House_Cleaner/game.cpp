@@ -12,9 +12,13 @@ Game::Game()
     View_rec.setPosition(View_rec.getSize().x/2,View_rec.getSize().y/2);
     View_rec.setOrigin(View_rec.getSize().x/2,View_rec.getSize().y/2);
 
-    hero->setPosition(737,629);
-//    hero->setPosition(2000,2000);
+    hero->setPosition(737,590);
     view.setCenter(hero->getPosition());
+
+    for(auto& el : mapa->enemy_pos)
+    {
+        enemy_vec.emplace_back(new Enemy_1(el));
+    }
 }
 
 void Game::Game_loop()
@@ -23,38 +27,20 @@ void Game::Game_loop()
     {
         sf::Time el = clock.restart();
         sf::Event event;
+        wall.clear();
         Events(event);
 
-        hero->movement(el,mapa->Wall_cols);
+        wall = mapa->Wall_cols;
 
-//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-//        {
-////            view.move(-150*el.asSeconds()*2,0);
-//            hero->move(-150*el.asSeconds()*2,0);
-//        }
-//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-//        {
-////            view.move(150*el.asSeconds()*2,0);
-//            hero->move(150*el.asSeconds()*2,0);
-//        }
-//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-//        {
-////            view.move(0,-150*el.asSeconds()*2);
-//            hero->move(0,-150*el.asSeconds()*2);
-//        }
-//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-//        {
-////            view.move(0,150*el.asSeconds()*2);
-//            hero->move(0,150*el.asSeconds()*2);
-//        }
-//        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-//            hero->attack();
+        for(auto& en : enemy_vec)
+            wall.emplace_back(en->hit_box());
 
         hero->face_to(mouse_pos);
-//        hero->setPosition(view.getCenter());
-        hero->update_status(el);
+        hero->movement(el,wall);
 
-//        hero->colision(mapa->Wall_cols);
+        if_hit_enemy();
+
+        hero->update_status(el);
 
         View_rec.setPosition(hero->getPosition());
         view.setCenter(hero->getPosition());
@@ -63,8 +49,13 @@ void Game::Game_loop()
         Maska->set_point(*mapa,View_rec,hero->getPosition(),el);
 //rysuj
         window->clear(sf::Color(150,150,150));
+
+        for(auto& el : enemy_vec)
+            window->draw(*el);
         for(auto& el : Maska->Vec_mask())
             window->draw(el);
+
+
 //        mapa->test_Draw(*window); //debug
 
         window->draw(*hero);
@@ -75,6 +66,42 @@ void Game::Game_loop()
 
 void Game::set_enemy()
 {
+
+}
+
+void Game::if_hit_enemy()
+{
+    if(hero->cheak_if_hit_sth)
+    {
+        for(auto& point : hero->hit_point)
+        {
+            for(enemy_it = enemy_vec.begin(); enemy_it != enemy_vec.end();)
+            {
+                cheak_if_hit((**enemy_it),point, hero->dmg());
+                if((*enemy_it)->is_dead)
+                {
+                    delete *enemy_it;
+                    enemy_it = enemy_vec.erase(enemy_it);
+                }
+                else
+                    enemy_it++;
+
+            }
+        }
+        hero->cheak_if_hit_sth = false;
+    }
+}
+
+void Game::cheak_if_hit(Enemy_1 &ch, sf::Vector2f point, float dmg)
+{
+    sf::RectangleShape temp;
+    temp.setSize(sf::Vector2f(5,5));
+    temp.setOrigin(2.5,2.5);
+    temp.setPosition(point);
+    if(ch.hit_box().getGlobalBounds().intersects(temp.getGlobalBounds()))
+    {
+        ch.hit_hp(dmg);
+    }
 
 }
 
@@ -106,22 +133,12 @@ void Game::Events(sf::Event event)
         }
         if(event.key.code == sf::Keyboard::Space)
         {
-            sf::SoundBuffer testtt;
 
-            if (!testtt.loadFromFile("../sounds/9_mm_gunshot.wav"))
-                    std::cout << "problem";
-        //    shot = testtt;
-            sf::Sound test2;
-            sf::Sound test;
-            test.setBuffer(testtt);
-            test.play();
-            if (test.getStatus() != sf::Sound::Playing)
-            {
-                std::cout << "co jest";
-                test.play();
-            }
-            else
-                std::cout << "co jes222t";
         }
+//        if(event.KeyReleased== sf::Event::KeyReleased)
+//        {
+//            if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+//                    hero->attack();
+//        }
     }
 }

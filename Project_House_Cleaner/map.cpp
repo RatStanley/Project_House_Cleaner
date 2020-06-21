@@ -44,7 +44,7 @@ void Map::convert_bitMap_to_grid(const char* file) // funcka zczytuje grid z bit
                                           };
 
     BMP bmp(file);
-    std::vector<std::vector<RGB>> image = bmp.foo();
+    std::vector<std::vector<RGB>> image = bmp.bmp_to_grid();
     for (int y = image[0].size()-1; y>=0; y--)
     {
         std::vector<int> temp;
@@ -101,7 +101,7 @@ void Map::grid_to_walls()
             }
             if(map_grid[i][j] == 6)
             {
-                enemy_pos.emplace_back(i*pix_size+100,i*pix_size+100);
+                enemy_pos.emplace_back(j*pix_size+100,i*pix_size+100);
             }
         }
     }

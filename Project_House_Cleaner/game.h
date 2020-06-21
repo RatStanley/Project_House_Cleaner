@@ -24,8 +24,14 @@ class Game
     sf::RectangleShape View_rec;
 
     std::vector<Enemy_1*> enemy_vec;
+    std::vector<Enemy_1*>::iterator enemy_it;
+    std::vector<sf::RectangleShape> wall;
 
     void set_enemy();
+    bool is_hit();
+
+    void if_hit_enemy();
+    void cheak_if_hit(Enemy_1 &ch, sf::Vector2f point, float dmg);
     void Events(sf::Event event);
 
 public:

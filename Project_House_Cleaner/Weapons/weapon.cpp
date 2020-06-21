@@ -97,6 +97,29 @@ void Weapon::put_your_weapon_away()
     }
 }
 
+sf::Vector2f Weapon::hit_place(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
+{
+    float M_t = (x1-x2)*(y3-y4)-(y1-y2)*(x3-x4);
+    float L_t = (x1-x3)*(y3-y4)-(y1-y3)*(x3-x4);
+
+    if(M_t != 0 )
+    {
+        float t = L_t/M_t;
+        if(0<=t && t <= 1) //0<=t && t <= 1 && 0<= u && u <= 1
+        {
+            sf::Vector2f cord(x1+t*(x2-x1),y1+t*(y2-y1));
+            sf::Vector2f rogi_offset(x3-x4,y3-y4);
+            sf::Vector2f cord_offset(cord.x-x4,cord.y-y4);
+            float iloczyn = rogi_offset.x*cord_offset.x+rogi_offset.y*cord_offset.y;
+            if(iloczyn > 0)
+            {
+                return cord;
+            }
+        }
+    }
+    return sf::Vector2f(0,0);
+}
+
 Weapon::Weapon()
 {
     animation_time = sf::Time::Zero;
@@ -104,6 +127,7 @@ Weapon::Weapon()
     active = false;
     anim_type = Animation_type::idle;
     extra = false;
+    hit_show = false;
 }
 
 Weapon::~Weapon()
@@ -126,6 +150,7 @@ void Weapon::Shot()
             extra = true;
             shot_sound.setBuffer(shot_Buf);
             shot_sound.play();
+            hit_show = true;
         }
     }
 }
@@ -158,6 +183,8 @@ void Weapon::Reload()
 sf::Vector2i Weapon::Animation(sf::Time tm)
 {
     animation_time+=tm;
+    if(hit_show)
+        hit_show = false;
     if(anim_type == Animation_type::Shot)
     {
 //        animation_time=tm;
@@ -182,6 +209,7 @@ sf::Vector2i Weapon::Extra_Animation()
 {
     return extra_Frame;
 }
+
 
 
 

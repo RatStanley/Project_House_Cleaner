@@ -23,8 +23,12 @@ public:
     void point_contains_colison(std::vector<sf::RectangleShape> walls);
     void face_to(sf::Vector2f aim);
 //    virtual void movement(sf::Time el);
-    virtual void attack() = 0;
+//    virtual void attack();
     void update_status(sf::Time tm);
+//    friend void cheak_if_hit(Character &, sf::Vector2f point, float dmg);
+    sf::RectangleShape hit_box(){return character_bounds;};
+    void hit_hp(float dmg);
+    bool is_dead;
 };
 
 #endif // CHARACTER_H

@@ -25,7 +25,8 @@ enum class Animation_type
 class Weapon
 {
 protected:
-    float DMG;
+//    float DMG;
+//    bool one = false;
     float angle;
     unsigned int rays_count;
     int max_ammo;
@@ -41,6 +42,13 @@ protected:
     sf::Vector2i current_Frame;
     sf::Vector2i extra_Frame;
     sf::Vector2i idle;
+
+    sf::Vector2f barrel_point_one;
+    sf::Vector2f barrel_point_two;
+    int barrel_one_offset_x;
+    int barrel_two_offset_x;
+    int barrel_offset_y;
+
     std::vector<sf::Vector2i> Reload_animation_pos;
     std::vector<sf::Vector2i> shot_animation_pos;
     std::vector<sf::Vector2i> Change_Animation_pos;
@@ -53,6 +61,8 @@ protected:
     void Change_Animation();
     void draw_your_weapon();
     void put_your_weapon_away();
+    sf::Vector2f hit_place(float x1,float y1,float x2,float y2,float x3,float y3,float x4,float y4);
+
 public:
     Weapon();
     ~Weapon();
@@ -62,8 +72,12 @@ public:
     void Reload();
     sf::Vector2i Animation(sf::Time cl);
     sf::Vector2i Extra_Animation();
+    virtual std::vector<sf::Vector2f> hits(std::vector<sf::RectangleShape> walls, sf::Vector2f pos, float rotation) = 0;
+    bool hit_show;
     bool extra;
     bool active;
+    float DMG;
+
 //    friend void deal_dmg(Character &ch,Map &m);
 };
 

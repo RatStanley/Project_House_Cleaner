@@ -15,15 +15,23 @@ Hero::Hero()
     Muzzle_flash.setTexture(texture);
     Muzzle_flash.setOrigin(24,0);
 
+    cheak_if_hit_sth = false;
+
     vel_x = 300;
     vel_y = 300;
 
 
 
     setPosition(737,629);
-//    shot_blast.setRadius(12);
-//    shot_blast.setOrigin(6,6);
-//    shot_blast.setFillColor(sf::Color(255,255,0,50));
+    Weapon_Change(1);
+
+
+
+    shot_blast.setSize(sf::Vector2f(2,2));
+    shot_blast.setOrigin(1,1);
+
+    test2.setSize(sf::Vector2f(2,2));
+    test2.setOrigin(1,1);
 }
 
 void Hero::movement(sf::Time el, std::vector<sf::RectangleShape> walls)
@@ -31,54 +39,58 @@ void Hero::movement(sf::Time el, std::vector<sf::RectangleShape> walls)
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
         move(-150*el.asSeconds()*2,0);
-        vel_x = -300;
-//        col_4(walls);
-//        colision(walls);
-//        colision(walls);
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
         move(150*el.asSeconds()*2,0);
-//        vel_x = 300;
-//        col_3(walls);
-//        colision(walls);
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
-//        vel_y = -300;
-//        col_2(walls);
         move(0,-150*el.asSeconds()*2);
-//        colision(walls);
 
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
-//        vel_y = 300;
-
-//        colision(walls);
         move(0,150*el.asSeconds()*2);
-//        colision(walls);
-//        col_1(walls);
     }
-    if(!sf::Keyboard::isKeyPressed(sf::Keyboard::W) &&
-            !sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
-            !sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
-            !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-    {
-        vel_x = 0;
-        vel_y = 0;
-    }
+//    if(!sf::Keyboard::isKeyPressed(sf::Keyboard::W) &&
+//            !sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
+//            !sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
+//            !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+//    {
+//        vel_x = 0;
+//        vel_y = 0;
+//    }
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        attack();
+    {
+        if(current_weapon->hit_show == false)
+        {
+            attack(walls);
+            //current_weapon->hit_show;
+
+        }
+    }
 
 //    move(vel_x*el.asSeconds(),vel_y*el.asSeconds());
 
     point_contains_colison(walls);
 }
 
-void Hero::attack()
+void Hero::attack(std::vector<sf::RectangleShape> walls)
 {
     current_weapon->Shot();
+    if(current_weapon->hit_show)
+    {
+        hit_point = current_weapon->hits(walls,getPosition(),getRotation());
+        //    test.clear();
+//        std::cout << "test";
+        cheak_if_hit_sth = true;
+        for(auto& hit : hit_point)
+        {
+            test2.setPosition(hit);
+            test.emplace_back(test2);
+        }
+    }
 }
 
 void Hero::reload()
@@ -108,7 +120,7 @@ void Hero::update_status(sf::Time tm)
 {
     sf::Vector2i temp;
     sf::Vector2i extra_temp;
-
+cheak_if_hit_sth = current_weapon->hit_show;
     if(current_used != next_weapon && current_weapon->active == false)
     {
         if(next_weapon == weapon_type::Pistol)
@@ -140,18 +152,13 @@ void Hero::update_status(sf::Time tm)
     texture_box.top = temp.y;
     texture_box.left = temp.x;
 
-//    setTextureRect(texture_box);
     Hero_sprite.setTextureRect(texture_box);
 
     texture_box.top = extra_temp.y;
     texture_box.left = extra_temp.x;
 
     Muzzle_flash.setTextureRect(texture_box);
-//    get
 
-//    character_bounds.setPosition(getPosition().x-35,getPosition().y-35);
-//    test.setSize(sf::Vector2f(getGlobalBounds().width,getGlobalBounds().height));
-//    test.setOrigin(getGlobalBounds().width/2,getGlobalBounds().height/2);
 }
 
 void Hero::draw(sf::RenderTarget &target, sf::RenderStates states) const
@@ -163,4 +170,12 @@ void Hero::draw(sf::RenderTarget &target, sf::RenderStates states) const
     target.draw(Hero_sprite,states);
     if(current_weapon->extra)
         target.draw(Muzzle_flash,states);
+
+    for(auto& el : test)
+        target.draw(el);
+
+//    target.draw(test);
+//    target.draw(shot_blast);
+
+//    target.draw(test2);
 }

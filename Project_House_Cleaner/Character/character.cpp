@@ -38,11 +38,21 @@ void Character::face_to(sf::Vector2f aim)
     setRotation(angle-90);
 }
 
+void Character::hit_hp(float dmg)
+{
+    hp-=dmg;
+    if(hp <= 0)
+        is_dead = true;
+    std::cout << hp << std::endl;
+
+}
+
 Character::Character()
 {
     character_bounds.setSize(sf::Vector2f(70,70));
     character_bounds.setOrigin(35,35);
     character_bounds.setFillColor(sf::Color::Red);
+    is_dead = false;
 }
 
 void Character::colision(std::vector<sf::RectangleShape> walls)
