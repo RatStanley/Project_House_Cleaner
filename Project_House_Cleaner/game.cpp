@@ -13,12 +13,14 @@ Game::Game()
     View_rec.setOrigin(View_rec.getSize().x/2,View_rec.getSize().y/2);
 
     hero->setPosition(737,590);
+//    hero->setPosition(2000,2000);
     view.setCenter(hero->getPosition());
 
     for(auto& el : mapa->enemy_pos)
     {
         enemy_vec.emplace_back(new Enemy_1(el));
     }
+    all_walls = mapa->all_wall_cols;
 }
 
 void Game::Game_loop()
@@ -32,13 +34,13 @@ void Game::Game_loop()
 
         wall = mapa->Wall_cols;
 
+
         for(auto& en : enemy_vec)
             wall.emplace_back(en->hit_box());
 
         hero->face_to(mouse_pos);
         hero->movement(el,wall);
-
-        if_hit_enemy();
+        Enemy_logic(el);
 
         hero->update_status(el);
 
@@ -69,7 +71,7 @@ void Game::set_enemy()
 
 }
 
-void Game::if_hit_enemy()
+void Game::Enemy_logic(sf::Time cl)
 {
     if(hero->cheak_if_hit_sth)
     {
@@ -90,13 +92,18 @@ void Game::if_hit_enemy()
         }
         hero->cheak_if_hit_sth = false;
     }
+    for(auto& en : enemy_vec)
+    {
+        en->change_dir(all_walls);
+        en->update_status(cl);
+    }
 }
 
 void Game::cheak_if_hit(Enemy_1 &ch, sf::Vector2f point, float dmg)
 {
     sf::RectangleShape temp;
-    temp.setSize(sf::Vector2f(5,5));
-    temp.setOrigin(2.5,2.5);
+    temp.setSize(sf::Vector2f(10,10));
+    temp.setOrigin(5,5);
     temp.setPosition(point);
     if(ch.hit_box().getGlobalBounds().intersects(temp.getGlobalBounds()))
     {

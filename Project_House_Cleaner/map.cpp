@@ -473,6 +473,8 @@ Map::Map(const char *file)
 
     cheak_for_intersect();
     cheak_for_door_intersect();
+    for(auto& wal: Walls)
+        all_wall_cols.emplace_back(wal.rect);
 }
 
 void Map::set_curent_visible(sf::RectangleShape view)

@@ -26,11 +26,14 @@ class Game
     std::vector<Enemy_1*> enemy_vec;
     std::vector<Enemy_1*>::iterator enemy_it;
     std::vector<sf::RectangleShape> wall;
+    std::vector<sf::RectangleShape> all_walls;
+
 
     void set_enemy();
     bool is_hit();
 
-    void if_hit_enemy();
+    void Enemy_logic(sf::Time cl);
+    void Enemy_move(sf::Time cl);
     void cheak_if_hit(Enemy_1 &ch, sf::Vector2f point, float dmg);
     void Events(sf::Event event);
 

@@ -19,12 +19,12 @@ protected:
     void load_texture(const char* file);
 public:
     Character();
-    void colision(std::vector<sf::RectangleShape> walls);
+    bool colision(std::vector<sf::RectangleShape> walls);
     void point_contains_colison(std::vector<sf::RectangleShape> walls);
     void face_to(sf::Vector2f aim);
 //    virtual void movement(sf::Time el);
 //    virtual void attack();
-    void update_status(sf::Time tm);
+    virtual void update_status(sf::Time tm) = 0;
 //    friend void cheak_if_hit(Character &, sf::Vector2f point, float dmg);
     sf::RectangleShape hit_box(){return character_bounds;};
     void hit_hp(float dmg);

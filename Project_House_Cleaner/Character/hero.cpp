@@ -22,7 +22,9 @@ Hero::Hero()
 
 
 
-    setPosition(737,629);
+//    setPosition(737,629);
+//    setPosition(2000,2000);
+
     Weapon_Change(1);
 
 
@@ -120,7 +122,7 @@ void Hero::update_status(sf::Time tm)
 {
     sf::Vector2i temp;
     sf::Vector2i extra_temp;
-cheak_if_hit_sth = current_weapon->hit_show;
+    cheak_if_hit_sth = current_weapon->hit_show;
     if(current_used != next_weapon && current_weapon->active == false)
     {
         if(next_weapon == weapon_type::Pistol)
@@ -165,7 +167,7 @@ void Hero::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     states.transform *= getTransform();
 
-//    target.draw(character_bounds);
+    target.draw(character_bounds);
 
     target.draw(Hero_sprite,states);
     if(current_weapon->extra)
