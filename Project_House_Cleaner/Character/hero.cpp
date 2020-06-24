@@ -4,7 +4,7 @@
 
 Hero::Hero()
 {
-    load_texture("../texture/MainCharacter.png");
+    load_texture("../Resources/texture/MainCharacter.png");
     current_used = weapon_type::Pistol;
     texture_box.width = 48;
     texture_box.height = 32;
@@ -17,23 +17,15 @@ Hero::Hero()
 
     cheak_if_hit_sth = false;
 
+    hp = 100;
+
     vel_x = 300;
     vel_y = 300;
 
+    character_bounds.setSize(sf::Vector2f(50,50));
+    character_bounds.setOrigin(25,25);
 
-
-//    setPosition(737,629);
-//    setPosition(2000,2000);
-
-    Weapon_Change(1);
-
-
-
-    shot_blast.setSize(sf::Vector2f(2,2));
-    shot_blast.setOrigin(1,1);
-
-    test2.setSize(sf::Vector2f(2,2));
-    test2.setOrigin(1,1);
+    //    Weapon_Change(1);
 }
 
 void Hero::movement(sf::Time el, std::vector<sf::RectangleShape> walls)
@@ -55,25 +47,24 @@ void Hero::movement(sf::Time el, std::vector<sf::RectangleShape> walls)
     {
         move(0,150*el.asSeconds()*2);
     }
-//    if(!sf::Keyboard::isKeyPressed(sf::Keyboard::W) &&
-//            !sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
-//            !sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
-//            !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-//    {
-//        vel_x = 0;
-//        vel_y = 0;
-//    }
+    //    if(!sf::Keyboard::isKeyPressed(sf::Keyboard::W) &&
+    //            !sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
+    //            !sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
+    //            !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    //    {
+    //        vel_x = 0;
+    //        vel_y = 0;
+    //    }
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         if(current_weapon->hit_show == false)
         {
             attack(walls);
-            //current_weapon->hit_show;
 
         }
     }
 
-//    move(vel_x*el.asSeconds(),vel_y*el.asSeconds());
+    //    move(vel_x*el.asSeconds(),vel_y*el.asSeconds());
 
     point_contains_colison(walls);
 }
@@ -84,14 +75,7 @@ void Hero::attack(std::vector<sf::RectangleShape> walls)
     if(current_weapon->hit_show)
     {
         hit_point = current_weapon->hits(walls,getPosition(),getRotation());
-        //    test.clear();
-//        std::cout << "test";
         cheak_if_hit_sth = true;
-        for(auto& hit : hit_point)
-        {
-            test2.setPosition(hit);
-            test.emplace_back(test2);
-        }
     }
 }
 
@@ -167,17 +151,18 @@ void Hero::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     states.transform *= getTransform();
 
-    target.draw(character_bounds);
+    //    target.draw(character_bounds);
 
     target.draw(Hero_sprite,states);
     if(current_weapon->extra)
         target.draw(Muzzle_flash,states);
 
-    for(auto& el : test)
-        target.draw(el);
+}
 
-//    target.draw(test);
-//    target.draw(shot_blast);
-
-//    target.draw(test2);
+std::string Hero::info_to_hud(std::string hud)
+{
+    if(hud == "hp")
+        return std::to_string(hp);
+    if(hud == "ammo")
+        return std::to_string(current_weapon->ammo);
 }

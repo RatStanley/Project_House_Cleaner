@@ -6,6 +6,7 @@
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+//#include <list>
 #include "BMP.h"
 
 struct Conversion
@@ -68,6 +69,8 @@ protected:
     sf::Vector2f intersection(std::pair<sf::Vector2f, sf::Vector2f> one, std::pair<sf::Vector2f, sf::Vector2f> two);
     sf::Vector2f wall_length(size_t i,size_t j);
 
+    std::vector<std::string> map_list;
+
 public:
     //void operator()();
     Map();//testowy konstruktor z testowym rozłożeniem ścian
@@ -85,6 +88,7 @@ public:
     Elevator elev[2];
 
     std::vector<sf::Vector2f> enemy_pos;
+    bool end_game;
 };
 
 #endif // MAP_H

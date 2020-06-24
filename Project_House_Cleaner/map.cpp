@@ -1,5 +1,6 @@
 #include "map.h"
 #include <string>
+//#include <bits/stdc++.h>
 
 Wall Map::Struct_walls(const sf::RectangleShape &bryla)
 {
@@ -68,7 +69,8 @@ void Map::grid_to_walls()
     sf::RectangleShape temp_wall;
 
     sf::RectangleShape map_borders;
-    map_borders.setSize(sf::Vector2f(map_grid[0].size()+100*pix_size,map_grid.size()+100*pix_size));
+    map_borders.setSize(sf::Vector2f(map_grid[0].size()*pix_size+1000,map_grid.size()*pix_size+1000));
+//    std::cout << map_grid[0].size() << "\t" << map_grid.size() << std::endl;
     map_borders.setPosition(map_borders.getSize().x/2,map_borders.getSize().y/2);
     map_borders.setOrigin(map_borders.getSize().x/2,map_borders.getSize().y/2);
 
@@ -461,7 +463,7 @@ Map::Map(const char *file)
 {
     convert_bitMap_to_grid(file);
     grid_to_walls();
-
+    end_game = false;
 
     elev[0].refresh_walls(0);
     elev[0].refresh_walls(1);
@@ -475,6 +477,14 @@ Map::Map(const char *file)
     cheak_for_door_intersect();
     for(auto& wal: Walls)
         all_wall_cols.emplace_back(wal.rect);
+
+    all_wall_cols.emplace_back(elev->door[0]);
+    all_wall_cols.emplace_back(elev->door[1]);
+
+    map_list.emplace_back("../Resources/map_folder/MAP1.bmp");
+    map_list.emplace_back("../Resources/map_folder/MAP2.bmp");
+    map_list.emplace_back("../Resources/map_folder/MAP3.bmp");
+
 }
 
 void Map::set_curent_visible(sf::RectangleShape view)
@@ -550,8 +560,10 @@ void Map::set_curent_visible(sf::RectangleShape view)
 
 void Map::test_Draw(sf::RenderWindow &win)
 {
+//    window_frame[0].rect.setFillColor(sf::Color::Red);
 
 //    win.draw(window_frame[0].rect);
+
     for(auto& el : Walls)
         win.draw(el.rect);
 
@@ -579,35 +591,34 @@ void Map::test_Draw(sf::RenderWindow &win)
 //"../map_folder/door_test2.bmp"
 void Map::set_new_Map(int level)
 {
-//    int level = 1;
-    if(level != actual_level)
+
+    if(level != actual_level && level < map_list.size())
     {
         actual_level = level;
-        std::cout << "test";
+        std::cout << "New Map Level : " << level << std::endl;
         Map *Temp;
-        Temp = new Map("../map_folder/MAP2.bmp");
-        //Temp->convert_bitMap_to_grid("../map_folder/door_test2.bmp");
-        //Temp->grid_to_walls();
-
-//        Temp->elev[0].refresh_walls(0);
-//        Temp->elev[0].refresh_walls(1);
-//        Temp->elev[1].refresh_walls(0);
-//        Temp->elev[1].refresh_walls(1);
-//    //    elev->refresh_walls(1);
-
-//       Temp->cheak_for_intersect();
-//       Temp->cheak_for_door_intersect();
-
-       Walls = Temp->Walls;
-       map_grid = Temp->map_grid;
-       intersection_point = Temp->intersection_point;
-       window_frame[0] = Temp->window_frame[0];
-       window_frame[1] = Temp->window_frame[1];
-       elev[0] = Temp->elev[0];
-       elev[1] = Temp->elev[1];
-
-
-       delete Temp;
+        char map[map_list.size()];
+        for(size_t i = 0; i< map_list[level].size(); i++)
+            map[i] = map_list[level][i];
+        Temp = new Map(map);
+        Walls = Temp->Walls;
+        map_grid = Temp->map_grid;
+        intersection_point = Temp->intersection_point;
+        window_frame[0] = Temp->window_frame[0];
+        window_frame[1] = Temp->window_frame[1];
+        elev[0] = Temp->elev[0];
+        elev[1] = Temp->elev[1];
+        all_wall_cols.clear();
+        for(auto& wal: Walls)
+            all_wall_cols.emplace_back(wal.rect);
+        all_wall_cols.emplace_back(elev->door[0]);
+        all_wall_cols.emplace_back(elev->door[1]);
+        enemy_pos = Temp->enemy_pos;
+        delete Temp;
+    }
+    else if(level >= map_list.size())
+    {
+        end_game = true;
     }
 }
 
@@ -709,47 +720,3 @@ void Elevator::door_move(sf::Vector2f pos, sf::Time cl)
 //    return {door[0],door[1]};
 }
 
-
-//void Map::door_move(sf::Vector2f pos, sf::Time cl)
-//{
-//    if(door[2].rect.getGlobalBounds().contains(pos))
-//    {
-//        if(door_open_ > 1.5)
-//        {
-//            if(door[0].points[0].x == door[1].points[0].x)
-//            {
-//                door[0].rect.move(0,-80*cl.asSeconds());
-//                door[1].rect.move(0,80*cl.asSeconds());
-//            }
-//            else if(door[0].points[0].y == door[1].points[0].y)
-//            {
-//                door[0].rect.move(-80*cl.asSeconds(),0);
-//                door[1].rect.move(80*cl.asSeconds(),0);
-//            }
-//            door_open_ = door_open_ - cl.asSeconds();
-//            door[0] = Struct_walls(door[0].rect);
-//            door[1] = Struct_walls(door[1].rect);
-//        }
-//    }
-//    else
-//    {
-//        if(door_open_ < 2)
-//        {
-//            if(door[0].points[0].x == door[1].points[0].x)
-//            {
-//                door[0].rect.move(0,80*cl.asSeconds());
-//                door[1].rect.move(0,-80*cl.asSeconds());
-
-
-//            }
-//            else if(door[0].points[0].y == door[1].points[0].y)
-//            {
-//                door[0].rect.move(80*cl.asSeconds(),0);
-//                door[1].rect.move(-80*cl.asSeconds(),0);
-//            }
-//            door_open_ +=cl.asSeconds();
-//            door[0] = Struct_walls(door[0].rect);
-//            door[1] = Struct_walls(door[1].rect);
-//        }
-//    }
-//}

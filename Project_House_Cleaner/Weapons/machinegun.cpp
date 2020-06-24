@@ -3,17 +3,13 @@
 
 MachineGun::MachineGun()
 {
-    DMG = 30;
-    angle = 0;
-    rays_count = 1;
+    DMG = 20;
     max_ammo = 60;
     ammo = max_ammo;
 
     idle = sf::Vector2i(0,64);
 
-//    Reload_animation_pos.emplace_back(0,256);//14
-//    Reload_animation_pos.emplace_back(48,256);
-//    Reload_animation_pos.emplace_back(96,256);
+
 
     for(size_t i = 0; i < 14; i++)
         Reload_animation_pos.emplace_back(48*i,256);//14
@@ -36,8 +32,8 @@ MachineGun::MachineGun()
     barrel_two_offset_x = 82;
     barrel_offset_y = 12;
 
-    if (!shot_Buf.loadFromFile("../sounds/M4A1_Single.wav"))
-            std::cout << "problem";
+    if (!shot_Buf.loadFromFile("../Resources/sounds/M4A1_Single.wav"))
+            std::cout << "MG sound error";
     shot_sound.setBuffer(shot_Buf);
 }
 

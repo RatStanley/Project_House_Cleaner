@@ -19,6 +19,17 @@ class Game
     sf::RenderWindow *window;
     sf::Clock clock;
     sf::View view;
+
+    sf::Font font;
+    sf::RectangleShape text_box[3];
+    sf::Text hud_info[3];
+
+    sf::Texture particle_tex;
+    std::vector<std::pair<sf::Sprite,int>*> particle_vec;
+    std::vector<std::pair<sf::Sprite,int>*>::iterator par_it;
+    sf::Sprite particle;
+    sf::Time frame_time;
+
     sf::Vector2f mouse_pos;
     sf::Vector2f player_pos;
     sf::RectangleShape View_rec;
@@ -27,6 +38,7 @@ class Game
     std::vector<Enemy_1*>::iterator enemy_it;
     std::vector<sf::RectangleShape> wall;
     std::vector<sf::RectangleShape> all_walls;
+    bool end_game;
 
 
     void set_enemy();
@@ -34,8 +46,11 @@ class Game
 
     void Enemy_logic(sf::Time cl);
     void Enemy_move(sf::Time cl);
-    void cheak_if_hit(Enemy_1 &ch, sf::Vector2f point, float dmg);
+    void cheak_if_hit(Character &ch, sf::Vector2f point, float dmg);
     void Events(sf::Event event);
+    void Draw();
+    void anime_particle(sf::Time cl);
+    void hud();
 
 public:
     Game();

@@ -4,8 +4,6 @@
 Pistol::Pistol()
 {
     DMG = 25;
-    angle = 0;
-    rays_count = 1;
     max_ammo = 7;
     ammo = max_ammo;
     shot_delay = 10;
@@ -35,8 +33,8 @@ Pistol::Pistol()
     barrel_offset_y = 21;
 
 
-    if (!shot_Buf.loadFromFile("../sounds/GUN_FIRE.wav")) // barreta_m9 , 9_mm_gunshot, GUN_FIRE
-            std::cout << "problem";
+    if (!shot_Buf.loadFromFile("../Resources/sounds/GUN_FIRE.wav")) // barreta_m9 , 9_mm_gunshot, GUN_FIRE
+            std::cout << "Pistol sound error";
     shot_sound.setBuffer(shot_Buf);
 }
 

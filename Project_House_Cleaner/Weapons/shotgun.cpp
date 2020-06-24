@@ -4,8 +4,6 @@
 ShotGun::ShotGun()
 {
     DMG = 25;
-    angle = 0;
-    rays_count = 5;
     max_ammo = 7;
     ammo = max_ammo;
     shot_delay = 20;
@@ -33,8 +31,8 @@ ShotGun::ShotGun()
     barrel_two_offset_x = 62;
     barrel_offset_y = 19;
 
-    if (!shot_Buf.loadFromFile("../sounds/shotgun-mossberg.wav"))
-            std::cout << "problem";
+    if (!shot_Buf.loadFromFile("../Resources/sounds/shotgun-mossberg.wav"))
+            std::cout << "Shotgun sound error";
     shot_sound.setBuffer(shot_Buf);
 }
 
@@ -54,7 +52,6 @@ void ShotGun::Reload_Animation()
             ammo++;
             if(ammo != max_ammo)
                 current_frame = 2;
-            std::cout <<ammo << std::endl;
         }
         else
         {

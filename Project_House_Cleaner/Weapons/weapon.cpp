@@ -210,6 +210,12 @@ sf::Vector2i Weapon::Extra_Animation()
     return extra_Frame;
 }
 
+void Weapon::Bot_options()
+{
+    DMG = 5;
+    shot_delay = 20;
+}
+
 
 
 

@@ -20,12 +20,10 @@ class Hero : public Character
     sf::Sprite Muzzle_flash;
 //    sf::RectangleShape character_bounds;
 //    bool shot;
-    sf::RectangleShape shot_blast;
+//    sf::RectangleShape shot_blast;
 
-//    sf::RectangleShape test;
-    sf::RectangleShape test2;
+//    sf::RectangleShape test2;
 
-    std::vector<sf::RectangleShape> test;
 
 
 
@@ -39,9 +37,8 @@ public:
     void hit_Scan(std::vector<sf::RectangleShape> walls);
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     float dmg(){return current_weapon->DMG;};
+    std::string info_to_hud(std::string hud);
 
-    bool cheak_if_hit_sth;
-    std::vector<sf::Vector2f> hit_point;
 };
 
 #endif // HERP_H

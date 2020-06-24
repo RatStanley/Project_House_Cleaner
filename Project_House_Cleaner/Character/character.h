@@ -3,7 +3,6 @@
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include <iostream>
 
 class Character : public sf::Sprite
 {
@@ -17,6 +16,8 @@ protected:
 
     sf::Vector2f pr_pos;
     void load_texture(const char* file);
+    bool wall_;
+
 public:
     Character();
     bool colision(std::vector<sf::RectangleShape> walls);
@@ -25,10 +26,14 @@ public:
 //    virtual void movement(sf::Time el);
 //    virtual void attack();
     virtual void update_status(sf::Time tm) = 0;
-//    friend void cheak_if_hit(Character &, sf::Vector2f point, float dmg);
+    friend void cheak_if_hit(Character &, sf::Vector2f point, float dmg);
     sf::RectangleShape hit_box(){return character_bounds;};
     void hit_hp(float dmg);
     bool is_dead;
+    std::vector<sf::Vector2f> hit_point;
+    bool cheak_if_hit_sth;
+
+
 };
 
 #endif // CHARACTER_H

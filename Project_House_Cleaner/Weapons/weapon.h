@@ -27,10 +27,9 @@ class Weapon
 protected:
 //    float DMG;
 //    bool one = false;
-    float angle;
-    unsigned int rays_count;
+//    float angle;
+//    unsigned int rays_count;
     int max_ammo;
-    int ammo;
     size_t current_frame;
     size_t shot_delay;
 
@@ -73,10 +72,12 @@ public:
     sf::Vector2i Animation(sf::Time cl);
     sf::Vector2i Extra_Animation();
     virtual std::vector<sf::Vector2f> hits(std::vector<sf::RectangleShape> walls, sf::Vector2f pos, float rotation) = 0;
+    void Bot_options();
     bool hit_show;
     bool extra;
     bool active;
     float DMG;
+    int ammo;
 
 //    friend void deal_dmg(Character &ch,Map &m);
 };

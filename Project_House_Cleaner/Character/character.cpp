@@ -1,7 +1,7 @@
 #include "character.h"
 
 #include <math.h>
-
+#include <iostream>
 
 void Character::load_texture(const char* file)
 {
@@ -43,8 +43,6 @@ void Character::hit_hp(float dmg)
     hp-=dmg;
     if(hp <= 0)
         is_dead = true;
-    std::cout << hp << std::endl;
-
 }
 
 Character::Character()
@@ -68,24 +66,19 @@ bool Character::colision(std::vector<sf::RectangleShape> walls)
     /// 1==2
     /// |  |
     /// 3==4
-//    bool next = false;
     for(auto& point : points)
     {
         for(auto& wall : walls)
         {
             if(wall.getGlobalBounds().contains(point))
             {
-//                std::cout << "tak" << std::endl;
                 setPosition(pr_pos);
                 return true;
-//                next = true;
-//                break;
             }
         }
-//        if(next)
-//            break;
     }
     pr_pos = getPosition();
+    wall_ = false;
     return false;
 }
 
@@ -109,7 +102,6 @@ void Character::point_contains_colison(std::vector<sf::RectangleShape> walls)
         {
             if(wall.getGlobalBounds().contains(point))
             {
-//                std::cout << "tak" << std::endl;
                 setPosition(pr_pos);
                 next = true;
                 break;
