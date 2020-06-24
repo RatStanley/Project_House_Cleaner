@@ -152,6 +152,7 @@ void Hero::draw(sf::RenderTarget &target, sf::RenderStates states) const
     states.transform *= getTransform();
 
     //    target.draw(character_bounds);
+    target.draw(test);
 
     target.draw(Hero_sprite,states);
     if(current_weapon->extra)

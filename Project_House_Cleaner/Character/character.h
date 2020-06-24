@@ -18,6 +18,8 @@ protected:
     void load_texture(const char* file);
     bool wall_;
 
+    sf::RectangleShape test;
+
 public:
     Character();
     bool colision(std::vector<sf::RectangleShape> walls);
