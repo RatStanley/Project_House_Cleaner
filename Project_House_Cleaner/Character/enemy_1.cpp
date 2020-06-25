@@ -39,6 +39,8 @@ Enemy_1::Enemy_1(sf::Vector2f pos,std::vector<sf::RectangleShape> walls)
     character_bounds.setPosition(getPosition());
     dir = 5;
     this->walls = walls;
+    walls_count = this->walls.size();
+    this->walls.emplace_back(sf::RectangleShape(sf::Vector2f(2,2)));
     draw_a_dir();
     follow = false;
     see_hero = false;
@@ -46,7 +48,6 @@ Enemy_1::Enemy_1(sf::Vector2f pos,std::vector<sf::RectangleShape> walls)
     pistol.Bot_options();
     dmg = pistol.DMG;
     cheak_if_hit_sth = false;
-
 }
 
 void Enemy_1::attack()
@@ -75,6 +76,11 @@ void Enemy_1::update_status(sf::Time tm)
     }
     else if(pos_to_hero_pos < 90000 && see_hero)
         attack();
+    else
+    {
+        move(vel_x*tm.asSeconds(), vel_y*tm.asSeconds());
+        change_dir();
+    }
 
     if(see_hero)
     {
@@ -84,7 +90,6 @@ void Enemy_1::update_status(sf::Time tm)
     texture_box.top = animation_temp.y;
     texture_box.left = animation_temp.x;
     setTextureRect(texture_box);
-
 }
 
 //void Enemy_1::hear_shot(sf::Vector2f hero_pos_)
@@ -113,24 +118,25 @@ void Enemy_1::see_hero_()
         float y1 = getPosition().y;
         float x2 = hero_pos.x;
         float y2 = hero_pos.y;
-        for(auto& wall : walls)
+//        for(auto& wall : walls)
+        for(size_t i = 0; i < walls_count; i++)
         {
             std::pair<sf::Vector2f, sf::Vector2f> wall_[4];
             wall_[0] = {
-                sf::Vector2f(wall.getGlobalBounds().left,wall.getGlobalBounds().top),                             //lt
-                sf::Vector2f(wall.getGlobalBounds().left+wall.getGlobalBounds().width,wall.getGlobalBounds().top)  //pt
+                sf::Vector2f(walls[i].getGlobalBounds().left,walls[i].getGlobalBounds().top),                             //lt
+                sf::Vector2f(walls[i].getGlobalBounds().left+walls[i].getGlobalBounds().width,walls[i].getGlobalBounds().top)  //pt
             };
             wall_[1] = {
-                sf::Vector2f(wall.getGlobalBounds().left+wall.getGlobalBounds().width,wall.getGlobalBounds().top),  //pt
-                sf::Vector2f(wall.getGlobalBounds().left+wall.getGlobalBounds().width,wall.getGlobalBounds().top + wall.getGlobalBounds().height)//pd
+                sf::Vector2f(walls[i].getGlobalBounds().left+walls[i].getGlobalBounds().width,walls[i].getGlobalBounds().top),  //pt
+                sf::Vector2f(walls[i].getGlobalBounds().left+walls[i].getGlobalBounds().width,walls[i].getGlobalBounds().top + walls[i].getGlobalBounds().height)//pd
             };
             wall_[2] = {
-                sf::Vector2f(wall.getGlobalBounds().left+wall.getGlobalBounds().width,wall.getGlobalBounds().top + wall.getGlobalBounds().height),//pd
-                sf::Vector2f(wall.getGlobalBounds().left,wall.getGlobalBounds().top + wall.getGlobalBounds().height)//ld
+                sf::Vector2f(walls[i].getGlobalBounds().left+walls[i].getGlobalBounds().width,walls[i].getGlobalBounds().top + walls[i].getGlobalBounds().height),//pd
+                sf::Vector2f(walls[i].getGlobalBounds().left,walls[i].getGlobalBounds().top + walls[i].getGlobalBounds().height)//ld
             };
             wall_[3] = {
-                sf::Vector2f(wall.getGlobalBounds().left,wall.getGlobalBounds().top),
-                sf::Vector2f(wall.getGlobalBounds().left,wall.getGlobalBounds().top + wall.getGlobalBounds().height)
+                sf::Vector2f(walls[i].getGlobalBounds().left,walls[i].getGlobalBounds().top),
+                sf::Vector2f(walls[i].getGlobalBounds().left,walls[i].getGlobalBounds().top + walls[i].getGlobalBounds().height)
             };
             for(auto& one : wall_)
             {
@@ -165,9 +171,10 @@ void Enemy_1::see_hero_()
 
 }
 
-void Enemy_1::new_hero_pos(sf::Vector2f hero_pos_)
+void Enemy_1::new_hero_pos(sf::Vector2f hero_pos_, sf::RectangleShape hero_rec)
 {
     hero_pos = hero_pos_;
+    walls[walls_count] = hero_rec;
 }
 
 void Enemy_1::go_to_hero_pos(sf::Time tm)

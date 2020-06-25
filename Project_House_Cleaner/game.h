@@ -42,6 +42,7 @@ class Game
 
 
     void set_enemy();
+    void set_Game();
     bool is_hit();
 
     void Enemy_logic(sf::Time cl);
@@ -52,8 +53,12 @@ class Game
     void anime_particle(sf::Time cl);
     void hud();
 
+    void dead_screen();
+    void end_screen();
+
 public:
     Game();
+    void menu();
     void Game_loop();
 };
 

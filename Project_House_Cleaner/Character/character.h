@@ -34,6 +34,7 @@ public:
     bool is_dead;
     std::vector<sf::Vector2f> hit_point;
     bool cheak_if_hit_sth;
+    int get_hp(){return  hp;}
 
 
 };

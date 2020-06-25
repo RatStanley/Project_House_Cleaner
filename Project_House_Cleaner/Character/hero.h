@@ -38,6 +38,7 @@ public:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     float dmg(){return current_weapon->DMG;};
     std::string info_to_hud(std::string hud);
+    void new_map(){hp = 100;}
 
 };
 

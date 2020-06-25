@@ -16,6 +16,7 @@ protected:
     Pistol pistol;
 
     std::vector<sf::RectangleShape> walls;
+    size_t walls_count;
 public:
     Enemy_1(sf::Vector2f pos, std::vector<sf::RectangleShape> walls);
     void attack();
@@ -24,7 +25,7 @@ public:
     void hear_shot(sf::Vector2f new_hero_pos_);
     void change_dir();
     void see_hero_();
-    void new_hero_pos(sf::Vector2f hero_pos_);
+    void new_hero_pos(sf::Vector2f hero_pos_, sf::RectangleShape hero_rec);
     void go_to_hero_pos(sf::Time tm);
 
     bool follow;

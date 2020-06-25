@@ -6,39 +6,16 @@ Game::Game()
     window = new sf::RenderWindow(sf::VideoMode(1280, 720), "window");
     window->setFramerateLimit(60);
     Maska = new maska;
-    mapa = new Map("../Resources/map_folder/MAP1.bmp");// test.bmp lub map_1.bmp test1 door_test
+    mapa = new Map("../Resources/map_folder/MAP0.bmp");// test.bmp lub map_1.bmp test1 door_test
     hero = new Hero;
     end_game = false;
-
-    view.setSize(1280,720);
-    View_rec.setSize(sf::Vector2f(1280,720));
-    View_rec.setPosition(View_rec.getSize().x/2,View_rec.getSize().y/2);
-    View_rec.setOrigin(View_rec.getSize().x/2,View_rec.getSize().y/2);
-
     font.loadFromFile("../Resources/fonts/arial.ttf");
-
-    hero->setPosition(737,590);
-    view.setCenter(hero->getPosition());
-
-    for(auto& el : mapa->enemy_pos)
-    {
-        enemy_vec.emplace_back(new Enemy_1(el,mapa->all_wall_cols));
-    }
-
-    if (!particle_tex.loadFromFile("../Resources/texture/spritesheet_particle.png"))
-    {
-        std::cout << "Could not load texture" << std::endl;
-    }
-    particle.setTexture(particle_tex);
-    particle.setScale(2,2);
-    particle.setTextureRect(sf::IntRect(0,0,48,48));
-    particle.setOrigin(24,24);
-    for(auto& hud : hud_info)
-        hud.setFont(font);
 }
 
 void Game::Game_loop()
 {
+    menu();
+    set_Game();
     while(window->isOpen())
     {
         sf::Time el = clock.restart();
@@ -46,7 +23,7 @@ void Game::Game_loop()
         wall.clear();
         Events(event);
 
-        if(mapa->end_game || end_game)
+        if(mapa->end_game || end_game || hero->get_hp() <= 0)
             break;
         wall = mapa->Wall_cols;
         anime_particle(el);
@@ -69,6 +46,12 @@ void Game::Game_loop()
         Draw();
 //        std::cout << 1/el.asSeconds() << std::endl;
     }
+    if(hero->get_hp() <= 0)
+    {
+        dead_screen();
+        std::cout << "tst";
+    }
+    end_screen();
 }
 
 void Game::set_enemy()
@@ -79,6 +62,34 @@ void Game::set_enemy()
     }
 //    all_walls = mapa->all_wall_cols;
     std::cout << "Enemy on Map : " << enemy_vec.size() << std::endl;
+}
+
+void Game::set_Game()
+{
+    view.setSize(1280,720);
+    View_rec.setSize(sf::Vector2f(1280,720));
+    View_rec.setPosition(View_rec.getSize().x/2,View_rec.getSize().y/2);
+    View_rec.setOrigin(View_rec.getSize().x/2,View_rec.getSize().y/2);
+
+
+    hero->setPosition(737,1000);
+    view.setCenter(hero->getPosition());
+
+    for(auto& el : mapa->enemy_pos)
+    {
+        enemy_vec.emplace_back(new Enemy_1(el,mapa->all_wall_cols));
+    }
+
+    if (!particle_tex.loadFromFile("../Resources/texture/spritesheet_particle.png"))
+    {
+        std::cout << "Could not load texture" << std::endl;
+    }
+    particle.setTexture(particle_tex);
+    particle.setScale(2,2);
+    particle.setTextureRect(sf::IntRect(0,0,48,48));
+    particle.setOrigin(24,24);
+    for(auto& hud : hud_info)
+        hud.setFont(font);
 }
 
 void Game::Enemy_logic(sf::Time cl)
@@ -100,6 +111,11 @@ void Game::Enemy_logic(sf::Time cl)
                     delete *enemy_it;
                     enemy_it = enemy_vec.erase(enemy_it);
                 }
+                else if((*enemy_it)->getPosition().x < 0 || (*enemy_it)->getPosition().y < 0)
+                {
+                    delete *enemy_it;
+                    enemy_it = enemy_vec.erase(enemy_it);
+                }
                 else
                     enemy_it++;
             }
@@ -109,10 +125,12 @@ void Game::Enemy_logic(sf::Time cl)
     }
     for(auto& en : enemy_vec)
     {
-        en->new_hero_pos(hero->getPosition());
+        en->new_hero_pos(hero->getPosition(), hero->hit_box());
         en->see_hero_();
         en->change_dir();
         en->update_status(cl);
+//        if(en->getPosition().x < 0 || en->getPosition().y < 0)
+//        std::cout<< en->getPosition().x << "\t" << en->getPosition().y << std::endl;
         if(en->cheak_if_hit_sth)
         {
 
@@ -169,6 +187,8 @@ void Game::Events(sf::Event event)
                     delete el;
                 enemy_vec.clear();
                 set_enemy();
+                hero->new_map();
+
             }
             if(mapa->elev[1].tp_space.getGlobalBounds().contains(hero->getPosition()) && mapa->elev[1].used == false && enemy_vec.size() == 0)
             {
@@ -177,6 +197,7 @@ void Game::Events(sf::Event event)
                     delete el;
                 enemy_vec.clear();
                 set_enemy();
+                hero->new_map();
             }
         }
         if(event.key.code == sf::Keyboard::Escape)
@@ -245,4 +266,99 @@ void Game::hud()
     hud_info[2].setString("HP : " + hero->info_to_hud("hp"));
     hud_info[2].setPosition(View_rec.getGlobalBounds().left + View_rec.getGlobalBounds().width - 150,
                             View_rec.getGlobalBounds().top+View_rec.getGlobalBounds().height - 40);
+}
+
+void Game::menu()
+{
+    sf::Text Play("Play",font);
+    Play.setPosition(1280/2 - Play.getGlobalBounds().width/2, 720/5);
+    sf::Text How_to_Play("How to Play", font);
+    How_to_Play.setPosition(1280/2 - How_to_Play.getGlobalBounds().width/2, (720/5)*2);
+    sf::Text quit("Quit", font);
+    quit.setPosition(1280/2 - quit.getGlobalBounds().width/2, (720/5)*3);
+    bool how_to = false;
+    while(window->isOpen())
+    {
+        sf::Event event;
+        while (window->pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window->close();
+            if(event.key.code == sf::Keyboard::Escape)
+            {
+                how_to = false;
+                Play.setPosition(1280/2 - Play.getGlobalBounds().width/2, 720/5);
+                Play.setString("Play");
+            }
+        }
+
+        mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            if(Play.getGlobalBounds().contains(mouse_pos))
+                break;
+            if(How_to_Play.getGlobalBounds().contains(mouse_pos))
+            {
+                Play.setPosition(10,10);
+                Play.setString("W,A,S,D -> Move \nLeft Mouse -> shot \nE -> in elevator to go to new level\n\n clear the map of opponents to move to the next floor\n\n Press ESC to return to main menu");
+                how_to = true;
+            }
+            if(quit.getGlobalBounds().contains(mouse_pos))
+            {
+                end_game = true;
+                break;
+            }
+        }
+        window->clear(sf::Color::Black);
+        window->draw(Play);
+        if(how_to == false)
+        {
+        window->draw(How_to_Play);
+        window->draw(quit);
+        }
+        window->display();
+    }
+}
+
+void Game::dead_screen()
+{
+    sf::Time tm = sf::Time::Zero;
+    view.setCenter(1280/2,720/2);
+    hud_info[0].setString("Game over");
+    hud_info[0].setPosition(1280/2-hud_info->getGlobalBounds().width/2,720/2);//View_rec.getGlobalBounds().left - View_rec.getGlobalBounds().width/2 - hud_info[0].getGlobalBounds().width/2,View_rec.getGlobalBounds().top - View_rec.getGlobalBounds().height/2);
+    window->setView(view);
+    while(tm.asSeconds() < 4)
+    {
+        tm+=clock.restart();
+
+        window->clear(sf::Color::Black);
+        window->draw(hud_info[0]);
+        window->display();
+    }
+}
+
+void Game::end_screen()
+{
+    sf::Time tm = sf::Time::Zero;
+    view.setCenter(1280/2,720/2);
+    hud_info[0].setString("Thanks for playing");
+    hud_info[0].setPosition(1280/2-hud_info[0].getGlobalBounds().width/2,720/5);//View_rec.getGlobalBounds().left - View_rec.getGlobalBounds().width/2 - hud_info[0].getGlobalBounds().width/2,View_rec.getGlobalBounds().top - View_rec.getGlobalBounds().height/2);
+
+    hud_info[1].setString("Project made by Stanislaw Ratajczak");
+    hud_info[1].setPosition(1280/2-hud_info[1].getGlobalBounds().width/2,720/5*2);
+
+    hud_info[2].setString("Textures made by : Sokus\nSound license can by found in Resources file");
+    hud_info[2].setPosition(1280/2-hud_info[2].getGlobalBounds().width/2,720/5*3);
+
+    window->setView(view);
+    while(tm.asSeconds() < 4)
+    {
+        tm+=clock.restart();
+
+        window->clear(sf::Color::Black);
+        window->draw(hud_info[0]);
+        window->draw(hud_info[1]);
+        window->draw(hud_info[2]);
+        window->display();
+    }
 }

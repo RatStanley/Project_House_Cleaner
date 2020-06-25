@@ -481,6 +481,7 @@ Map::Map(const char *file)
     all_wall_cols.emplace_back(elev->door[0]);
     all_wall_cols.emplace_back(elev->door[1]);
 
+    map_list.emplace_back("../Resources/map_folder/MAP0.bmp");
     map_list.emplace_back("../Resources/map_folder/MAP1.bmp");
     map_list.emplace_back("../Resources/map_folder/MAP2.bmp");
     map_list.emplace_back("../Resources/map_folder/MAP3.bmp");
@@ -697,24 +698,27 @@ void Elevator::door_move(sf::Vector2f pos, sf::Time cl)
     }
     else
     {
-        if(door_gape < 2.5)
+        if(used == false)
         {
-            if(points[0][0].x == points[1][0].x)
+            if(door_gape < 2.5)
             {
-                door[0].move(0,80*cl.asSeconds());
-                door[1].move(0,-80*cl.asSeconds());
+                if(points[0][0].x == points[1][0].x)
+                {
+                    door[0].move(0,80*cl.asSeconds());
+                    door[1].move(0,-80*cl.asSeconds());
 
 
+                }
+                else if(points[0][0].y == points[1][0].y)
+                {
+                    door[0].move(80*cl.asSeconds(),0);
+                    door[1].move(-80*cl.asSeconds(),0);
+                }
+                door_gape +=cl.asSeconds();
+
+                refresh_walls(0);
+                refresh_walls(1);
             }
-            else if(points[0][0].y == points[1][0].y)
-            {
-                door[0].move(80*cl.asSeconds(),0);
-                door[1].move(-80*cl.asSeconds(),0);
-            }
-            door_gape +=cl.asSeconds();
-
-            refresh_walls(0);
-            refresh_walls(1);
         }
     }
 //    return {door[0],door[1]};
