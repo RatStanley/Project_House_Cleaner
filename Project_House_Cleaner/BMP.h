@@ -6,6 +6,9 @@
 
 #pragma pack(push, 1)
 
+//Ten kod został napisany w oparciu o
+//https://solarianprogrammer.com/2018/11/19/cpp-reading-writing-bmp-images/
+
 struct RGB
 {
 	int R;
