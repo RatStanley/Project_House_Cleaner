@@ -32,7 +32,7 @@ Wall Map::Struct_walls(const sf::RectangleShape &bryla)
     return Temp;
 }
 
-void Map::convert_bitMap_to_grid(const char* file) // funcka zczytuje grid z bitmapy //w razie problemów z gridem drugi size_t na int
+void Map::convert_bitMap_to_grid(const char* file)
 {
     map_grid.clear();
     std::vector<Conversion> conversions = { {{0, 0, 0},"1"}, // ściana
@@ -46,6 +46,7 @@ void Map::convert_bitMap_to_grid(const char* file) // funcka zczytuje grid z bit
 
     BMP bmp(file);
     std::vector<std::vector<RGB>> image = bmp.bmp_to_grid();
+
     for (int y = image[0].size()-1; y>=0; y--)
     {
         std::vector<int> temp;
@@ -600,8 +601,12 @@ void Map::set_new_Map(int level)
         Map *Temp;
         char map[map_list.size()];
         for(size_t i = 0; i< map_list[level].size(); i++)
+        {
             map[i] = map_list[level][i];
+            std::cout << map_list[level][i];
+        }
         Temp = new Map(map);
+
         Walls = Temp->Walls;
         map_grid = Temp->map_grid;
         intersection_point = Temp->intersection_point;
@@ -610,6 +615,7 @@ void Map::set_new_Map(int level)
         elev[0] = Temp->elev[0];
         elev[1] = Temp->elev[1];
         all_wall_cols.clear();
+
         for(auto& wal: Walls)
             all_wall_cols.emplace_back(wal.rect);
         all_wall_cols.emplace_back(elev->door[0]);
@@ -621,6 +627,13 @@ void Map::set_new_Map(int level)
     {
         end_game = true;
     }
+}
+
+bool Map::outside_map(sf::Vector2f pos)
+{
+    if(window_frame[0].rect.getGlobalBounds().contains(pos))
+        return false;
+    return true;
 }
 
 Elevator::Elevator(sf::RectangleShape &door_1,

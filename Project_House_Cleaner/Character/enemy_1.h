@@ -20,7 +20,6 @@ protected:
 public:
     Enemy_1(sf::Vector2f pos, std::vector<sf::RectangleShape> walls);
     void attack();
-//    friend void cheak_if_hit(Enemy_1 &ch, sf::Vector2f point, float dmg);
     void update_status(sf::Time tm);
     void hear_shot(sf::Vector2f new_hero_pos_);
     void change_dir();

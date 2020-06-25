@@ -11,7 +11,7 @@ ShotGun::ShotGun()
 
     for(size_t i = 0; i < 6; i++)
     {
-        Reload_animation_pos.emplace_back(48*i,224); // do zmiany
+        Reload_animation_pos.emplace_back(48*i,224);
     }
 
 
@@ -34,6 +34,7 @@ ShotGun::ShotGun()
     if (!shot_Buf.loadFromFile("../Resources/sounds/shotgun-mossberg.wav"))
             std::cout << "Shotgun sound error";
     shot_sound.setBuffer(shot_Buf);
+    shot_sound.setVolume(10);
 }
 
 void ShotGun::Reload_Animation()

@@ -187,17 +187,14 @@ sf::Vector2i Weapon::Animation(sf::Time tm)
         hit_show = false;
     if(anim_type == Animation_type::Shot)
     {
-//        animation_time=tm;
         Shot_Animation();
     }
     else if(anim_type == Animation_type::Change)
     {
-//        animation_time+=tm;
         Change_Animation();
     }
     else if(anim_type == Animation_type::Reload)
     {
-//        animation_time+=tm;
         Reload_Animation();
     }
     else

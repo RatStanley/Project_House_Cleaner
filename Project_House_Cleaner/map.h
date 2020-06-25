@@ -41,7 +41,6 @@ struct Elevator
     float door_gape = 2.5;
     void refresh_walls(size_t i);
     void door_move(sf::Vector2f pos, sf::Time cl);
-    //std::pair<sf::RectangleShape, sf::RectangleShape> door_move(sf::Vector2f pos, sf::Time cl); //sprawdz czy void nie lepszy
 };
 
 
@@ -72,7 +71,6 @@ protected:
     std::vector<std::string> map_list;
 
 public:
-    //void operator()();
     Map();//testowy konstruktor z testowym rozłożeniem ścian
     Map(const char*  file);
     friend void set_point(Map &m, sf::RectangleShape &view, sf::Vector2f pos, sf::Clock cl);
@@ -80,6 +78,7 @@ public:
     void test_Draw(sf::RenderWindow &win);
     void door_move(sf::Vector2f pos, sf::Time cl);
     void set_new_Map(int level);
+    bool outside_map(sf::Vector2f pos);
 
     std::vector<sf::Vector2f> point_on_screen;
     std::vector<std::pair<sf::Vector2f, sf::Vector2f>> walls_on_screen;

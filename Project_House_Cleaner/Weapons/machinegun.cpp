@@ -35,6 +35,7 @@ MachineGun::MachineGun()
     if (!shot_Buf.loadFromFile("../Resources/sounds/M4A1_Single.wav"))
             std::cout << "MG sound error";
     shot_sound.setBuffer(shot_Buf);
+    shot_sound.setVolume(10);
 }
 
 std::vector<sf::Vector2f> MachineGun::hits(std::vector<sf::RectangleShape> walls, sf::Vector2f pos, float rotation)

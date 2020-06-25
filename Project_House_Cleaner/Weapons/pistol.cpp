@@ -36,6 +36,7 @@ Pistol::Pistol()
     if (!shot_Buf.loadFromFile("../Resources/sounds/GUN_FIRE.wav")) // barreta_m9 , 9_mm_gunshot, GUN_FIRE
             std::cout << "Pistol sound error";
     shot_sound.setBuffer(shot_Buf);
+    shot_sound.setVolume(10);
 }
 
 std::vector<sf::Vector2f> Pistol::hits(std::vector<sf::RectangleShape> walls, sf::Vector2f pos, float rotation)

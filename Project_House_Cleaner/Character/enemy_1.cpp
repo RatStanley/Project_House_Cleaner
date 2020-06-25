@@ -92,18 +92,6 @@ void Enemy_1::update_status(sf::Time tm)
     setTextureRect(texture_box);
 }
 
-//void Enemy_1::hear_shot(sf::Vector2f hero_pos_)
-//{
-//    if(pow(getPosition().x - hero_pos_.x,2) + pow(getPosition().y - hero_pos_.y,2) < 500000 && follow == false)
-//    {
-//        follow = true;
-////        setColor(sf::Color::Green);
-//    }
-
-//    if(pow(getPosition().x - hero_pos_.x,2) + pow(getPosition().y - hero_pos_.y,2) < 250000)
-//        setColor(sf::Color::Green);
-//}
-
 void Enemy_1::change_dir()
 {
     if(colision(walls) && see_hero == false && follow == false )
@@ -118,7 +106,6 @@ void Enemy_1::see_hero_()
         float y1 = getPosition().y;
         float x2 = hero_pos.x;
         float y2 = hero_pos.y;
-//        for(auto& wall : walls)
         for(size_t i = 0; i < walls_count; i++)
         {
             std::pair<sf::Vector2f, sf::Vector2f> wall_[4];

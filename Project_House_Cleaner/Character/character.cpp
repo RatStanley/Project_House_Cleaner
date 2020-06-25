@@ -14,9 +14,6 @@ void Character::load_texture(const char* file)
     setTextureRect(sf::IntRect(0,0,48,32));
     setPosition(600,600);
     setOrigin(24,16);
-
-    test.setSize(sf::Vector2f(10,10));
-    test.setOrigin(5,5);
 }
 
 void Character::face_to(sf::Vector2f aim)

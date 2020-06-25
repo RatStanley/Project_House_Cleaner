@@ -10,12 +10,18 @@ Game::Game()
     hero = new Hero;
     end_game = false;
     font.loadFromFile("../Resources/fonts/arial.ttf");
+
+
+    ambient_sound.openFromFile("../Resources/sounds/medium_rainstorm.wav");
+    ambient_sound.setVolume(5);
+    ambient_sound.setLoop(true);
 }
 
 void Game::Game_loop()
 {
     menu();
     set_Game();
+    ambient_sound.play();
     while(window->isOpen())
     {
         sf::Time el = clock.restart();
@@ -32,6 +38,7 @@ void Game::Game_loop()
             wall.emplace_back(en->hit_box());
 
         mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window)); // pozycja myszki
+
         hero->face_to(mouse_pos);
         hero->movement(el,wall);
         Enemy_logic(el);
@@ -49,7 +56,6 @@ void Game::Game_loop()
     if(hero->get_hp() <= 0)
     {
         dead_screen();
-        std::cout << "tst";
     }
     end_screen();
 }
@@ -60,7 +66,6 @@ void Game::set_enemy()
     {
         enemy_vec.emplace_back(new Enemy_1(el,mapa->all_wall_cols));
     }
-//    all_walls = mapa->all_wall_cols;
     std::cout << "Enemy on Map : " << enemy_vec.size() << std::endl;
 }
 
@@ -111,7 +116,7 @@ void Game::Enemy_logic(sf::Time cl)
                     delete *enemy_it;
                     enemy_it = enemy_vec.erase(enemy_it);
                 }
-                else if((*enemy_it)->getPosition().x < 0 || (*enemy_it)->getPosition().y < 0)
+                else if(mapa->outside_map((*enemy_it)->getPosition()))
                 {
                     delete *enemy_it;
                     enemy_it = enemy_vec.erase(enemy_it);
@@ -277,6 +282,7 @@ void Game::menu()
     sf::Text quit("Quit", font);
     quit.setPosition(1280/2 - quit.getGlobalBounds().width/2, (720/5)*3);
     bool how_to = false;
+    bool exit_loop = false;
     while(window->isOpen())
     {
         sf::Event event;
@@ -287,33 +293,38 @@ void Game::menu()
             if(event.key.code == sf::Keyboard::Escape)
             {
                 how_to = false;
-                Play.setPosition(1280/2 - Play.getGlobalBounds().width/2, 720/5);
-                Play.setString("Play");
+                How_to_Play.setString("How to Play");
+                How_to_Play.setPosition(1280/2 - How_to_Play.getGlobalBounds().width/2, (720/5)*2);
             }
-        }
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
 
-        mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        {
-            if(Play.getGlobalBounds().contains(mouse_pos))
-                break;
-            if(How_to_Play.getGlobalBounds().contains(mouse_pos))
-            {
-                Play.setPosition(10,10);
-                Play.setString("W,A,S,D -> Move \nLeft Mouse -> shot \nE -> in elevator to go to new level\n\n clear the map of opponents to move to the next floor\n\n Press ESC to return to main menu");
-                how_to = true;
-            }
-            if(quit.getGlobalBounds().contains(mouse_pos))
-            {
-                end_game = true;
-                break;
+                    if(Play.getGlobalBounds().contains(mouse_pos))
+                        exit_loop = true;
+                    if(How_to_Play.getGlobalBounds().contains(mouse_pos))
+                    {
+                        How_to_Play.setPosition(10,10);
+                        How_to_Play.setString("W,A,S,D -> Move \nLeft Mouse -> shot \n1,2,3 -> Change weapon\nR -> Reload\nE -> in elevator to go to new level\n\nClear the map of opponents to move to the next floor\n\nPress ESC to return to main menu");
+                        how_to = true;
+                    }
+                    if(quit.getGlobalBounds().contains(mouse_pos))
+                    {
+                        end_game = true;
+                        exit_loop = true;
+                    }
+                }
             }
         }
+        if(exit_loop)
+            break;
         window->clear(sf::Color::Black);
-        window->draw(Play);
+        window->draw(How_to_Play);
         if(how_to == false)
         {
-        window->draw(How_to_Play);
+        window->draw(Play);
         window->draw(quit);
         }
         window->display();

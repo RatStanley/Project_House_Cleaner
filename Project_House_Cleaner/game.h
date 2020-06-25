@@ -24,6 +24,8 @@ class Game
     sf::RectangleShape text_box[3];
     sf::Text hud_info[3];
 
+    sf::Music ambient_sound;
+
     sf::Texture particle_tex;
     std::vector<std::pair<sf::Sprite,int>*> particle_vec;
     std::vector<std::pair<sf::Sprite,int>*>::iterator par_it;

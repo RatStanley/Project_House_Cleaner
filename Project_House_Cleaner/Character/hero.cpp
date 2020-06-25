@@ -32,29 +32,21 @@ void Hero::movement(sf::Time el, std::vector<sf::RectangleShape> walls)
 {
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
-        move(-150*el.asSeconds()*2,0);
+        move(-vel_x*el.asSeconds(),0);
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-        move(150*el.asSeconds()*2,0);
+        move(vel_x*el.asSeconds(),0);
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
-        move(0,-150*el.asSeconds()*2);
+        move(0,-vel_y*el.asSeconds());
 
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
-        move(0,150*el.asSeconds()*2);
+        move(0,vel_y*el.asSeconds());
     }
-    //    if(!sf::Keyboard::isKeyPressed(sf::Keyboard::W) &&
-    //            !sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
-    //            !sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
-    //            !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-    //    {
-    //        vel_x = 0;
-    //        vel_y = 0;
-    //    }
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         if(current_weapon->hit_show == false)
@@ -63,8 +55,6 @@ void Hero::movement(sf::Time el, std::vector<sf::RectangleShape> walls)
 
         }
     }
-
-    //    move(vel_x*el.asSeconds(),vel_y*el.asSeconds());
 
     point_contains_colison(walls);
 }
@@ -152,7 +142,6 @@ void Hero::draw(sf::RenderTarget &target, sf::RenderStates states) const
     states.transform *= getTransform();
 
     //    target.draw(character_bounds);
-    target.draw(test);
 
     target.draw(Hero_sprite,states);
     if(current_weapon->extra)

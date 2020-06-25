@@ -25,10 +25,6 @@ enum class Animation_type
 class Weapon
 {
 protected:
-//    float DMG;
-//    bool one = false;
-//    float angle;
-//    unsigned int rays_count;
     int max_ammo;
     size_t current_frame;
     size_t shot_delay;
@@ -78,8 +74,6 @@ public:
     bool active;
     float DMG;
     int ammo;
-
-//    friend void deal_dmg(Character &ch,Map &m);
 };
 
 #endif // WEAPON_H

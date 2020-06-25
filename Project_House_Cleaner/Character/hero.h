@@ -18,14 +18,6 @@ class Hero : public Character
 
     sf::Sprite Hero_sprite;
     sf::Sprite Muzzle_flash;
-//    sf::RectangleShape character_bounds;
-//    bool shot;
-//    sf::RectangleShape shot_blast;
-
-//    sf::RectangleShape test2;
-
-
-
 
 public:
     Hero();
@@ -39,7 +31,6 @@ public:
     float dmg(){return current_weapon->DMG;};
     std::string info_to_hud(std::string hud);
     void new_map(){hp = 100;}
-
 };
 
 #endif // HERP_H
